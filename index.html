@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("noematrace.theme") === "light"
+            ? "light"
+            : "dark";
+      } catch {
+        document.documentElement.dataset.theme = "dark";
+      }
+    </script>
+    <link rel="icon" type="image/png" href="/brand/noematrace-mark.png" />
+    <title>NoemaTrace — Evidence and workflow review</title>
+    <meta name="description" content="Inspect a workflow exception, test a correction and keep a traceable human decision. An interactive product design concept by Robert Vaganian." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NoemaTrace — From a mismatch to a traceable decision" />
+    <meta property="og:description" content="An evidence-first workspace for reviewing invoice exceptions, testing corrections and preserving decisions." />
+    <meta property="og:image" content="https://robertvaganian.github.io/noematrace/og/noematrace.jpg" />
+    <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="NoemaTrace invoice exception review workspace with a dependency graph and source evidence." />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
