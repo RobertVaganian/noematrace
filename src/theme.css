@@ -1,0 +1,207 @@
+/* Color roles shared by the application, case study and embedded views. */
+:root {
+  --selection: #9aaec9;
+  --selection-soft: #9aaec920;
+  --graph-edge: #96969e;
+  --graph-dot: #515158;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --selection: #536d91;
+  --selection-soft: #536d9114;
+  --graph-edge: #7d7d8b;
+  --graph-dot: #c9c9d4;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--muted);
+}
+.theme-toggle:hover {
+  background: light-dark(#e7e7ed, #252529);
+  border-color: var(--border);
+  color: var(--text);
+}
+.user-area {
+  gap: 12px;
+}
+
+/* Selection and warning meaning use separate, consistent signals. */
+.workflow-node.conflict,
+.workflow-node.conflict.is-selected {
+  border-color: var(--selection);
+  outline: none;
+}
+.workflow-node.conflict.is-selected {
+  box-shadow: 0 0 0 1px var(--selection-soft);
+}
+.workflow-node.conflict .react-flow__handle-right,
+.workflow-node.conflict .react-flow__handle-bottom {
+  background: var(--selection);
+}
+.workflow-node.conflict .node-tag {
+  color: var(--text);
+  background: light-dark(#e8edf4, #303945);
+  border: 1px solid var(--selection);
+}
+.event-status {
+  display: inline-grid;
+  grid-template-columns: 15px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 7px;
+  line-height: 1.5;
+}
+.event-status > svg {
+  display: block;
+  margin: 0;
+  flex-shrink: 0;
+}
+.event-status.completed > svg,
+.event-status.not-started > svg {
+  color: var(--muted);
+}
+.event-table td {
+  vertical-align: top;
+}
+.event-timeline {
+  display: none;
+}
+.compact-node .node-copy > span {
+  font-size: 14px;
+}
+.react-flow__node-workflow .workflow-node.compact-node {
+  width: 174px;
+}
+:root[data-theme="light"] .document-record {
+  border: 1px solid #dddde4;
+}
+
+:root[data-theme="light"] .modal {
+  box-shadow: 0 24px 90px #0003;
+}
+:root[data-theme="light"] .inspector.mobile-open {
+  box-shadow: -16px 0 48px #0002;
+}
+:root[data-theme="light"] .case-frame-link > span {
+  background: #fffffff2;
+  border-color: #b4b4c1;
+  color: #272730;
+}
+.case-header nav {
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .event-table-scroll {
+    display: none;
+  }
+  .event-timeline {
+    display: block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .event-timeline > li {
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+  }
+  .event-line-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 108px;
+    gap: 12px;
+    align-items: start;
+  }
+  .event-line-heading > strong {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+  }
+  .event-line-heading > .event-status {
+    font-size: 11px;
+    width: 100%;
+    line-height: 18px;
+  }
+  .event-timeline time {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin: 5px 0 7px;
+    font-variant-numeric: tabular-nums;
+  }
+  .event-timeline p {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+  .event-timeline small {
+    display: block;
+    margin-top: 7px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .execution-log {
+    height: clamp(264px, 35dvh, 320px);
+  }
+  .app-shell {
+    min-height: 780px;
+  }
+  .full-events,
+  .audit-view {
+    padding: 22px 17px;
+  }
+  .topbar {
+    gap: 6px;
+  }
+  .user-area {
+    gap: 6px;
+  }
+  .theme-toggle {
+    width: 32px;
+    height: 34px;
+  }
+  .breadcrumb {
+    gap: 6px;
+  }
+  .case-header nav {
+    gap: 8px;
+  }
+  .case-header .theme-toggle {
+    width: 32px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 380px) {
+  .breadcrumb > span:first-child {
+    display: none;
+  }
+  .breadcrumb .crumb-divider {
+    display: none;
+  }
+  .run-status {
+    border-left: 0;
+    padding-left: 4px;
+  }
+  .case-header {
+    gap: 10px;
+    padding-inline: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,116 @@
+/* Semantic state and interaction hierarchy, shared by the review and live case views. */
+:root {
+  --danger-ink: light-dark(#983e33, #f1b2a5);
+  --danger-soft: light-dark(#fff0eb, #342521);
+  --danger-border: light-dark(#c57666, #b4786a);
+  --danger-halo: light-dark(#c5766629, #e49c8d26);
+  --pause-ink: light-dark(#805514, #dfc080);
+  --pause-soft: light-dark(#fcf2de, #302a1f);
+  --pause-border: light-dark(#e4cfaa, #655537);
+}
+
+/* Identical visible containers, not just equal invisible hit areas. */
+.user-area > .review-guide-trigger,
+.user-area > .theme-toggle,
+.user-area > .avatar {
+  width: 40px; height: 40px; flex: 0 0 40px; padding: 0;
+  border: 1px solid light-dark(#d6d9e2, #3c3e46); border-radius: 8px;
+  background: light-dark(#fff, #23252b); color: var(--text);
+}
+.user-area > .review-guide-trigger:hover,
+.user-area > .theme-toggle:hover,
+.user-area > .avatar:hover,
+.user-area > .avatar[aria-expanded="true"] {
+  border-color: var(--selection); background: var(--selection-soft);
+}
+.user-area > .avatar .avatar-initials {
+  width: 100%; height: 100%; border: 0; border-radius: inherit;
+  background: transparent; color: inherit; font-size: 12px;
+}
+.user-area > .avatar .avatar-glyph { transform: translateY(.5px); }
+.user-area { gap: 8px; }
+
+:root[data-theme="light"] .sidebar {
+  background: #152031; border-color: #263449; color: #e4eaf3;
+}
+:root[data-theme="light"] .sidebar .brand-mark { filter: brightness(0) invert(1); }
+:root[data-theme="light"] .sidebar .wordmark { color: #f4f6fa; }
+:root[data-theme="light"] .sidebar nav button { color: #c5cfdd; }
+:root[data-theme="light"] .sidebar nav button > svg { color: inherit; opacity: 1; }
+:root[data-theme="light"] .sidebar nav button:hover { background: #202e43; color: #fff; }
+:root[data-theme="light"] .sidebar nav button.active { background: #2a394f; border-color: #45546b; color: #fff; }
+:root[data-theme="light"] .sidebar nav small { background: #45536a; color: #f3f6fa; }
+:root[data-theme="light"] .sidebar .case-study-link,
+:root[data-theme="light"] .sidebar .demo-label { color: #b0bfd2; }
+:root[data-theme="light"] .sidebar .case-study-link:hover,
+:root[data-theme="light"] .sidebar .demo-label:hover { color: #fff; background: #202e43; }
+:root[data-theme="light"] .sidebar :focus-visible { outline-color: #d8e5ff; }
+
+.workflow-node { box-shadow: 0 2px 5px #0000001c, 0 6px 16px #0000000b; }
+:root[data-theme="light"] .workflow-node { box-shadow: 0 2px 3px #17263b13, 0 5px 12px #17263b09; }
+.workflow-node.conflict,
+.workflow-node.conflict.is-selected,
+:root[data-theme="light"] .workflow-node.conflict,
+:root[data-theme="light"] .workflow-node.conflict.is-selected {
+  color: var(--text); border-color: var(--danger-border); background: var(--danger-soft);
+  box-shadow: 0 0 0 1px var(--danger-halo), 0 3px 9px #00000012;
+}
+.workflow-node.conflict .node-warning { color: var(--danger-ink); }
+.workflow-node.conflict .node-tag {
+  background: var(--danger-soft); color: var(--danger-ink); border-color: var(--danger-border);
+}
+.workflow-node.conflict .react-flow__handle { background: var(--danger-border); }
+.workflow-node.is-previewed,
+:root[data-theme="light"] .workflow-node.is-previewed {
+  border-color: var(--selection); box-shadow: 0 0 0 4px var(--selection-soft), 0 3px 9px #00000017;
+}
+.workflow-node.conflict.is-previewed,
+:root[data-theme="light"] .workflow-node.conflict.is-previewed {
+  border-color: var(--danger-border); box-shadow: 0 0 0 4px var(--danger-halo), 0 3px 9px #00000017;
+}
+.check-status {
+  padding: 10px 12px; border: 1px solid light-dark(#edc6bd, #67483e);
+  border-radius: 8px; background: var(--danger-soft); color: var(--danger-ink);
+}
+.check-status > span, .check-status > span svg { color: var(--danger-ink); }
+.check-status > small { color: var(--danger-ink); opacity: .85; }
+.financial-summary .financial-difference strong,
+.financial-summary .financial-difference .financial-label > span,
+.financial-summary .financial-difference .money-currency { color: var(--danger-ink); }
+.run-status {
+  padding: 3px 7px; border: 1px solid var(--pause-border); border-radius: 5px;
+  background: var(--pause-soft); color: var(--pause-ink); font-size: 11px; line-height: 1.25;
+}
+.run-status svg { color: currentColor; flex-shrink: 0; }
+.event-status.completed > svg, .event-status.passed > svg, .event-status.approved > svg { color: var(--green); }
+.event-status.mismatch > svg, .event-status.failed > svg { color: var(--danger-ink); }
+.event-status.pending > svg, .event-status.returned > svg { color: var(--pause-ink); }
+.tiny-state.completed > svg { color: var(--green); }
+.tiny-state.conflict, .proposal-diff .conflict { color: var(--danger-ink); }
+.event-row-action { cursor: pointer; }
+.event-table .event-row-action:hover,
+.event-table .event-row-action:focus-within,
+.event-timeline .event-row-action:hover,
+.event-timeline .event-row-action:focus-within { background: var(--selection-soft); }
+.event-timeline .event-row-action { border-radius: 6px; }
+.event-row-action .event-step-link { color: inherit; }
+.extraction-source { font-size: 11px; color: var(--muted); margin: 14px 0 8px; }
+.step-information .extracted-fields > div {
+  display: grid; grid-template-columns: 95px minmax(0, 1fr); align-items: baseline;
+  gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); margin: 0;
+}
+.extracted-fields dt { font-size: 11px; }
+.extracted-fields dd { text-align: right; margin: 0; font-size: 12px; overflow-wrap: anywhere; }
+.extracted-fields .money { font-size: 12px; }
+.extraction-missing { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; line-height: 1.6; color: var(--pause-ink); margin-top: 14px; }
+.extraction-missing > svg { flex-shrink: 0; margin-top: 1px; }
+.canvas-guide { transition: opacity var(--motion-enter) var(--motion-ease); }
+.canvas-guide.is-dismissed { opacity: 0; pointer-events: none; }
+:root[data-theme="light"] .app-shell .primary-button {
+  background: #20344c; border-color: #20344c; color: #fff; box-shadow: 0 2px 4px #15203115;
+}
+:root[data-theme="light"] .app-shell .primary-button:hover:not(:disabled) { background: #2b4564; border-color: #2b4564; }
+@media (max-width: 560px) {
+  .user-area { gap: 6px; }
+  .run-status { padding: 2px 5px; font-size: 10px; max-width: 96px; white-space: normal; }
+}
