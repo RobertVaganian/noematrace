@@ -1,0 +1,21 @@
+WEBVTT
+
+00:00.000 --> 00:08.950
+An invoice for EUR 12,480 is linked to an order for EUR 1,248.
+The workflow pauses before payment preparation.
+
+00:08.950 --> 00:17.900
+A read-only test compares PO-731 with proposed order PO-732.
+Supplier, currency, total and line items match. Payment actions are skipped.
+
+00:17.900 --> 00:26.850
+Finance reviews a specific submitted version and its test.
+A decision requires a note and acknowledgement of the evidence.
+
+00:26.850 --> 00:35.800
+This example retains returned v1 and approved v2 with separate test IDs.
+Approving the correction does not execute a payment.
+
+00:35.800 --> 00:45.000
+An ERP update makes the earlier evidence outdated.
+The historical snapshot remains, but a fresh test and review are required.
