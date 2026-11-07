@@ -1,0 +1,91 @@
+{
+  "invoice": {
+    "id": "INV-2048",
+    "vendor": "Northline Components",
+    "vendorId": "SUP-4587",
+    "currency": "EUR",
+    "cents": 1248000,
+    "date": "28 Oct 2026",
+    "version": "1.0",
+    "lines": [
+      {
+        "name": "Industrial sensor NX-100",
+        "qty": 40,
+        "unit": 24000
+      },
+      {
+        "name": "Mounting kit MK-7",
+        "qty": 20,
+        "unit": 12000
+      },
+      {
+        "name": "Freight",
+        "qty": 1,
+        "unit": 48000
+      }
+    ]
+  },
+  "orders": [
+    {
+      "id": "PO-731",
+      "vendor": "Northline Components",
+      "vendorId": "SUP-4587",
+      "currency": "EUR",
+      "cents": 124800,
+      "date": "20 Oct 2026",
+      "version": "3.2",
+      "description": "Sensor sample order",
+      "lines": [
+        {
+          "name": "Industrial sensor NX-100",
+          "qty": 8,
+          "unit": 15600
+        }
+      ]
+    },
+    {
+      "id": "PO-732",
+      "vendor": "Northline Components",
+      "vendorId": "SUP-4587",
+      "currency": "EUR",
+      "cents": 1248000,
+      "date": "24 Oct 2026",
+      "version": "1.4",
+      "description": "Sensors and mounting kits",
+      "lines": [
+        {
+          "name": "Industrial sensor NX-100",
+          "qty": 40,
+          "unit": 24000
+        },
+        {
+          "name": "Mounting kit MK-7",
+          "qty": 20,
+          "unit": 12000
+        },
+        {
+          "name": "Freight",
+          "qty": 1,
+          "unit": 48000
+        }
+      ]
+    },
+    {
+      "id": "PO-733",
+      "vendor": "Atlas Parts",
+      "vendorId": "SUP-9271",
+      "currency": "EUR",
+      "cents": 1248000,
+      "date": "25 Oct 2026",
+      "version": "1.0",
+      "description": "Assembly components",
+      "lines": [
+        {
+          "name": "Assembly component",
+          "qty": 100,
+          "unit": 12480
+        }
+      ]
+    }
+  ]
+}
