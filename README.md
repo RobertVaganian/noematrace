@@ -81,7 +81,7 @@ Finance reviews the submitted version with its test results, then either approve
 
 ## Why I designed it this way
 
-I wanted to see whether I could make an exception review feel less like digging through separate screens and more like having the whole context in front of you. The graph keeps the dependency chain visible. The detail panel shows the selected step. The log runs chronologically below. You dont have to reconstruct what happened by opening three tabs.
+I wanted to see whether I could make an exception review feel less like digging through separate screens and more like having the whole context in front of you. The graph keeps the dependency chain visible. The detail panel shows the selected step. The log runs chronologically below. You don't have to reconstruct what happened by opening three tabs.
 
 What also mattered was that a decision should be permanently attached to the version that was actually reviewed. If someone requests changes, the revision becomes a separate version with its own explanation and test results. You can compare them directly instead of guessing what changed between rounds.
 
