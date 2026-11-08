@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { useState, useEffect, useRef } from "react";
 import {
   FileIcon,
@@ -61,7 +62,7 @@ export function Review({ state, dispatch, onClose, saveStatus = null }) {
     return (
       <Modal
         title="Operations review required"
-        eyebrow="RN-2048 / Permissions"
+        eyebrow={`${RUN_ID} / Permissions`}
         onClose={onClose}
         className="about-modal"
       >
@@ -81,7 +82,7 @@ export function Review({ state, dispatch, onClose, saveStatus = null }) {
           ? "Compare test results"
           : "Review the linked purchase order"
       }
-      eyebrow={`RN-2048 / Draft v${state.draftVersion}`}
+      eyebrow={`${RUN_ID} / Draft v${state.draftVersion}`}
       onClose={onClose}
       className="review-modal"
       onKeyDown={event => { if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && view === "edit") { event.preventDefault(); if (canTest) beginTest(); } }}

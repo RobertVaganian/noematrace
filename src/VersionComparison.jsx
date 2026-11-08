@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { useMemo, useState } from "react";
 import { GitDiffIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import { Modal, Money, DataText } from "./components.jsx";
@@ -99,7 +100,7 @@ export function VersionComparison({ state, onClose }) {
   return (
     <Modal
       title="Compare proposal versions"
-      eyebrow="RN-2048 / Version history"
+      eyebrow={`${RUN_ID} / Version history`}
       onClose={onClose}
       className="version-comparison-modal"
     >

@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { initialState, orders } from "./model.js";
 
 export const reviewStorageKey = "noematrace.review.v1";
@@ -109,7 +110,7 @@ export function validReview(s) {
 export function encodeReview(state, savedAt = new Date().toISOString()) {
   return JSON.stringify({
     schemaVersion: 1,
-    runId: "RN-2048",
+    runId: RUN_ID,
     savedAt,
     state: { ...state, error: "" },
   });
@@ -122,7 +123,7 @@ export function decodeReview(raw) {
     const saved = JSON.parse(raw);
     if (
       saved.schemaVersion !== 1 ||
-      saved.runId !== "RN-2048" ||
+      ![RUN_ID, "RN-2048"].includes(saved.runId) ||
       !text(saved.savedAt) ||
       !Number.isFinite(Date.parse(saved.savedAt)) ||
       !validReview(saved.state)

@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { invoice, orders } from "./model.js";
 
 const normalize = (value) =>
@@ -76,7 +77,7 @@ export function reviewRecord(
     synthetic: true,
     exportedAt,
     scenarioDate: "2026-10-31",
-    runId: "RN-2048",
+    runId: RUN_ID,
     phase: state.phase,
     scope:
       "Association review only. No payment was created, submitted or authorized.",

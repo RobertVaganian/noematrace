@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { useState, useEffect, useRef } from "react";
 import { AssociationEvidence } from "./AssociationEvidence.jsx";
 import { EvidenceChanges } from "./VersionComparison.jsx";
@@ -147,7 +148,7 @@ export function ProposalDialog({
           ? `Proposal v${p.version}`
           : `${proposalLabels[p.status]} · v${p.version}`
       }
-      eyebrow="RN-2048 / Finance review"
+      eyebrow={`${RUN_ID} / Finance review`}
       onClose={onClose}
       className="proposal-modal"
     >

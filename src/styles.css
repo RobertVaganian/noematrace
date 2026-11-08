@@ -9,7 +9,7 @@
   --border: light-dark(#e7e7ed, #2b2b30);
   --muted: light-dark(#565663, #a3a3ad);
   --text: light-dark(#272730, #dddde1);
-  --orange: light-dark(#a34d25, #ff976f);
+  --danger-ink: light-dark(#71546b, #d4bbce);
   --green: light-dark(#326b45, #a8c9b2);
   color-scheme: dark;
   font-size: 14px;
@@ -476,11 +476,11 @@ h4 {
 }
 
 .workflow-node.conflict {
-  border-color: var(--orange);
+  border-color: var(--danger-ink);
 }
 
 .workflow-node.conflict.is-selected {
-  outline: 1px solid #ff976f55;
+  outline: 1px solid #d4bbce55;
 }
 
 .workflow-node > svg {
@@ -530,7 +530,7 @@ h4 {
   position: absolute;
   right: 7px;
   top: 7px;
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 
 .workflow-node .react-flow__handle {
@@ -543,7 +543,7 @@ h4 {
 }
 
 .workflow-node.conflict .react-flow__handle-right {
-  background: var(--orange);
+  background: var(--danger-ink);
 }
 
 .workflow-node.conflict .react-flow__handle-top,
@@ -567,8 +567,8 @@ h4 {
 }
 
 .workflow-node.conflict .node-tag {
-  background: var(--orange);
-  color: light-dark(#fff4e9, #201a17);
+  background: var(--danger-ink);
+  color: light-dark(#f3edf2, #201a17);
 }
 
 .inactive-edge {
@@ -689,7 +689,7 @@ h4 {
 }
 
 .event-status.mismatch svg {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 
 .event-status.passed {
@@ -752,7 +752,7 @@ h4 {
 }
 
 .check-status svg {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 
 .check-status > small {
@@ -945,7 +945,7 @@ h4 {
 }
 
 .conflict {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 
 .pass {
@@ -1007,7 +1007,7 @@ h4 {
 }
 
 .queue-row > svg:first-child {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 
 .queue-row > div {
@@ -1527,7 +1527,7 @@ h4 {
 .field-error {
   font-size: 12px;
   line-height: 1.5;
-  color: light-dark(#9b4a25, #ffac8b);
+  color: light-dark(#71546b, #d4bbce);
   margin-top: 12px;
 }
 
@@ -2661,8 +2661,8 @@ dialog.inspector::backdrop {
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  border: 1px solid light-dark(#caa78e, #685044);
-  background: light-dark(#fff4e9, #2a211d);
+  border: 1px solid light-dark(#d6c6d1, #645060);
+  background: light-dark(#f3edf2, #302832);
   padding: 15px 17px;
   border-radius: 4px;
   margin-bottom: 23px;
@@ -2670,17 +2670,17 @@ dialog.inspector::backdrop {
   line-height: 1.6;
 }
 .evidence-alert > svg {
-  color: var(--orange);
+  color: var(--danger-ink);
   flex-shrink: 0;
   margin-top: 2px;
 }
 .evidence-alert strong {
   font-size: 13px;
   font-weight: 500;
-  color: light-dark(#783f20, #f1c3ad);
+  color: light-dark(#71546b, #d4bbce);
 }
 .evidence-alert p {
-  color: light-dark(#76513b, #cfc0b9);
+  color: light-dark(#71546b, #c8bbc5);
   margin-top: 4px;
 }
 .proposal-history {
@@ -2799,7 +2799,7 @@ dialog.inspector::backdrop {
 }
 .proposal-status.outdated,
 .proposal-status.changes_requested {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 .history-footnote {
   display: flex;
@@ -2907,7 +2907,7 @@ dialog.inspector::backdrop {
 }
 .source-denied {
   font-size: 12px;
-  color: var(--orange);
+  color: var(--danger-ink);
   padding: 8px 0 20px;
 }
 .decision-record {

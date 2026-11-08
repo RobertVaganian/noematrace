@@ -1,9 +1,9 @@
 /* Semantic state and interaction hierarchy, shared by the review and live case views. */
 :root {
-  --danger-ink: light-dark(#983e33, #f1b2a5);
-  --danger-soft: light-dark(#fff0eb, #342521);
-  --danger-border: light-dark(#c57666, #b4786a);
-  --danger-halo: light-dark(#c5766629, #e49c8d26);
+  --danger-ink: light-dark(#71546b, #d4bbce);
+  --danger-soft: light-dark(#f3edf2, #302832);
+  --danger-border: light-dark(#aa8c9f, #927489);
+  --danger-halo: light-dark(#aa8c9f29, #c4a6ba26);
   --pause-ink: light-dark(#805514, #dfc080);
   --pause-soft: light-dark(#fcf2de, #302a1f);
   --pause-border: light-dark(#e4cfaa, #655537);
@@ -69,7 +69,7 @@
   border-color: var(--danger-border); box-shadow: 0 0 0 4px var(--danger-halo), 0 3px 9px #00000017;
 }
 .check-status {
-  padding: 10px 12px; border: 1px solid light-dark(#edc6bd, #67483e);
+  padding: 10px 12px; border: 1px solid light-dark(#d6c6d1, #645060);
   border-radius: 8px; background: var(--danger-soft); color: var(--danger-ink);
 }
 .check-status > span, .check-status > span svg { color: var(--danger-ink); }

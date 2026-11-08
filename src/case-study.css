@@ -319,7 +319,7 @@ body:has(.case-study) { min-width: 0; }
 }
 .case-keyline > svg {
   flex-shrink: 0;
-  color: var(--orange);
+  color: var(--danger-ink);
   margin-top: 3px;
 }
 .case-workflow {
