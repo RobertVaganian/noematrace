@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { dataTokens } from '../src/data-format.js';
+import { RUN_ID } from '../src/run-reference.js';
+
+test('dated run references remain a single presentation token without losing digits', () => {
+  const value = `Run ${RUN_ID} / Draft v2`;
+  const tokens = dataTokens(value);
+  assert.equal(tokens.map(part => part.text).join(''), value);
+  assert.deepEqual(tokens.filter(part => part.data).map(part => part.text), [RUN_ID, 'v2']);
+});
 
 test('data emphasis preserves punctuation, dates, decimals and user-authored text exactly', () => {
   const value = 'PO-732 updated to v1.7: freight changed from EUR 480.00 to EUR 960.00. Tested 31 Oct 2026 10:42:01. <script> is literal text.';
