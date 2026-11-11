@@ -20,8 +20,8 @@ W, H = 360, 176
 FPS = 60
 SECONDS = DURATION
 PALETTES = {
-    "light": dict(bg="#f4f6fa", surface="#ffffff", border="#c9cfda", ink="#303642", muted="#626e80", focus="#536d91", soft="#e8effa", warning="#a34d25", warning_soft="#fff1ec", pass_soft="#edf6f0", pass_= "#326b45", dot="#ccd3df"),
-    "dark": dict(bg="#1a1d23", surface="#252a32", border="#4b5565", ink="#e2e6ed", muted="#b2bdcd", focus="#a8bedb", soft="#303e51", warning="#ffac8b", warning_soft="#372821", pass_soft="#24372c", pass_="#a8c9b2", dot="#3b4656"),
+    "light": dict(bg="#f4f6fa", surface="#ffffff", border="#c9cfda", ink="#303642", muted="#626e80", focus="#536d91", soft="#e8effa", warning="#71546b", warning_soft="#f3edf2", pass_soft="#edf6f0", pass_= "#326b45", dot="#ccd3df"),
+    "dark": dict(bg="#1a1d23", surface="#252a32", border="#4b5565", ink="#e2e6ed", muted="#b2bdcd", focus="#a8bedb", soft="#303e51", warning="#d4bbce", warning_soft="#302832", pass_soft="#24372c", pass_="#a8c9b2", dot="#3b4656"),
 }
 
 def mix(a, b, t):

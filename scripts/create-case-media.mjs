@@ -10,16 +10,16 @@ try { sharp = require('sharp'); } catch {
   if (!process.env.NOEMATRACE_MEDIA_NODE_MODULES) throw new Error('Media generation requires the sharp package.');
   sharp = require(`${process.env.NOEMATRACE_MEDIA_NODE_MODULES}/sharp`);
 }
-const captures = process.argv[2] || 'qa/v26';
+const captures = process.argv[2] || 'qa/v30';
 const root = process.cwd();
 const out = path.join(root, 'public/case');
 for (const theme of ['light', 'dark']) {
   const directory = path.join(out, theme);
   await mkdir(directory, {recursive:true});
   for (const [source,name,region] of [
-    [theme === 'dark' ? 'qa/v10/01-before-dark.jpg' : `${captures}/10-canvas-earlier-light.jpg`, 'canvas-earlier-context.webp', {left:229,top:190,width:791,height:718}],
+    [`${captures}/10-canvas-earlier-${theme}.jpg`, 'canvas-earlier-context.webp', {left:229,top:190,width:791,height:718}],
     [`${captures}/03-trace-${theme}.jpg`, 'canvas-current-context.webp', {left:229,top:190,width:791,height:718}],
-    [theme === 'dark' ? 'qa/v12/02-review-before.jpg' : `${captures}/12-review-earlier-light.jpg`, 'review-earlier-context.webp', {left:176,top:32,width:1012,height:872}],
+    [`${captures}/12-review-earlier-${theme}.jpg`, 'review-earlier-context.webp', {left:176,top:32,width:1012,height:872}],
     [`${captures}/04-review-${theme}.jpg`, 'review-current-context.webp', {left:176,top:32,width:1012,height:872}],
   ]) await sharp(path.join(root,source)).extract(region).webp({quality:94}).toFile(path.join(directory,name));
   const scenes=['03-trace','05-comparison','06-finance','07-history','08-stale'];

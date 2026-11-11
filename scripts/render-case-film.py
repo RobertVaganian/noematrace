@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 import subprocess
 import tempfile
 import sys
+import shutil
 
 ROOT = Path(__file__).resolve().parent.parent
 THEME = sys.argv[1] if len(sys.argv) > 1 else 'dark'
@@ -52,8 +53,8 @@ with tempfile.TemporaryDirectory(prefix='noematrace-film-') as folder:
 
         frame.save(folder/f'frame-{i}.png')
         frame.save(OUT/f'chapter-{i+1}.jpg', quality=95)
-        subprocess.run(['ffmpeg','-y','-loglevel','error','-loop','1','-framerate','60','-i',str(folder/f'frame-{i}.png'),'-t','7','-an','-c:v','libx264','-preset','fast','-crf','19','-pix_fmt','yuv420p','-threads','2','-movflags','+faststart',str(folder/f'chapter-{i+1}.mp4')],check=True)
-        (folder/f'chapter-{i+1}.mp4').replace(OUT/f'chapter-{i+1}.mp4')
+        subprocess.run(['ffmpeg','-y','-loglevel','error','-loop','1','-framerate','60','-i',str(folder/f'frame-{i}.png'),'-t','7','-an','-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p','-threads','2','-movflags','+faststart',str(folder/f'chapter-{i+1}.mp4')],check=True)
+        shutil.move(str(folder/f'chapter-{i+1}.mp4'), str(OUT/f'chapter-{i+1}.mp4'))
         if i==0: frame.save(OUT/'overview-poster.jpg', quality=95)
     args=['ffmpeg','-y','-loglevel','error']
     for i in range(5): args += ['-loop','1','-framerate','60','-t','7.24','-i',str(folder/f'frame-{i}.png')]
@@ -62,7 +63,7 @@ with tempfile.TemporaryDirectory(prefix='noematrace-film-') as folder:
     # boundary therefore has the right explanation, without passing stale text.
     for i in range(1,5): filters.append(f'[{"v0" if i==1 else "f"+str(i-1)}][v{i}]xfade=transition=fade:duration=0.24:offset={7*i}[f{i}]')
     args += ['-filter_complex',';'.join(filters),'-map','[f4]','-t','35',
-      '-c:v','libx264','-preset','fast','-crf','19','-threads','2','-filter_complex_threads','1',
+      '-c:v','libx264','-preset','veryfast','-crf','19','-threads','2','-filter_complex_threads','1',
       '-an','-movflags','+faststart',str(OUT/'overview.mp4')]
     subprocess.run(args,check=True)
 print(f'{THEME}: 35-second 1600×1000 film; integrated captions, no audio, 60 fps.')
