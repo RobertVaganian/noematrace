@@ -14,9 +14,9 @@
   [![Node.js 22.12 or newer](https://img.shields.io/badge/Node-%E2%89%A522.12-626e80?style=flat&labelColor=242831)](.nvmrc)
 
   <p>
-    <a href="https://robertvaganian.github.io/noematrace/"><strong>Live prototype ↗</strong></a>
+    <a href="https://robertvaganian.github.io/noematrace/"><strong>Live prototype</strong></a>
     &nbsp; · &nbsp;
-    <a href="https://robertvaganian.github.io/noematrace/case-study/"><strong>Case study ↗</strong></a>
+    <a href="https://robertvaganian.github.io/noematrace/case-study/"><strong>Case study</strong></a>
   </p>
 
 </div>
