@@ -31,7 +31,7 @@ function Refinement({ item, onEnlarge }) {
   const { theme } = useTheme();
   const [version, setVersion] = useState("current");
   const label = version === "current" ? "Current prototype" : "Earlier iteration";
-  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=31`);
+  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=33`);
   return <article>
     <h3>{item.title}</h3><p>{item.text}</p>
     <div className="case-evidence-toolbar">
@@ -43,7 +43,7 @@ function Refinement({ item, onEnlarge }) {
     </div>
     <figure className="case-context-image">
       <button type="button" onClick={() => onEnlarge({ src, alt: item[version], title: `${item.title} ${label}` })} aria-label={`Enlarge ${label.toLowerCase()}: ${item.title}`}>
-        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=31`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
+        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=33`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
       </button>
       <figcaption>{version === "current" ? item.current : item.earlier}</figcaption>
     </figure>
@@ -77,7 +77,7 @@ function OverviewFilm({ onExpand }) {
   const [active, setActive] = useState(0), [visit, setVisit] = useState(0);
   const [playing, setPlaying] = useState(false), [elapsed, setElapsed] = useState(0), [error, setError] = useState(false);
   const [ready, setReady] = useState(false);
-  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=31`);
+  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=33`);
   const previous = useRef({ poster, theme, active, visit });
   const [outgoing, setOutgoing] = useState(poster);
   const clock = value => `0:${String(Math.floor(value)).padStart(2, "0")}`;
@@ -132,7 +132,7 @@ function OverviewFilm({ onExpand }) {
         onEnded={event => { if (!currentMedia(event)) return; setElapsed(7); progress.current?.style.setProperty("--chapter-progress", 1); if (intent.current && active < 4) choose(active + 1); else { intent.current = false; setPlaying(false); } }}
         onError={event => { if (currentMedia(event)) { setReady(true); setError(true); intent.current = false; setPlaying(false); } }}
         aria-label={`Chapter ${active + 1}: ${overviewChapters[active].name}. Seven-second silent screen walkthrough.`} aria-describedby="case-film-description">
-        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=31`)} type="video/mp4" />
+        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=33`)} type="video/mp4" />
         Read the complete walkthrough below.
       </video>
     </div>
@@ -165,7 +165,7 @@ function Overview() {
       <p>Playback is an edited sequence of actual screens, not a live review session. It does not change your review.</p>
     </details>
     {expanded !== null && <Modal title={overviewChapters[Math.min(4, Math.floor(expanded / 7))].name} eyebrow="Actual prototype screen" className="case-image-modal case-frame-modal" onClose={() => setExpanded(null)}>
-      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=31`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
+      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=33`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
       <p>{overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail}</p>
     </Modal>}
   </section>;
@@ -617,7 +617,7 @@ export function CaseStudy() {
                   state-aware review guidance, seven-step tour recovery, placement, isolated navigation preferences, cancellation of interrupted UI motion, event-to-step navigation, panel-size limits, keyboard resizing, isolated layout preferences and migration of saved tour progress.
                 </span>
               </li>
-              <li><CheckIcon size={17} /><span><strong>11 animation and media checks</strong> verify centred Fit, visible workflow bounds, the click target, all seven tour loops in both themes, bounded divider demonstrations, clipped event text during resize, click timing and independent seven-second overview chapters.</span></li>
+              <li><CheckIcon size={17} /><span><strong>13 animation and media checks</strong> verify centred Fit, visible workflow bounds, the click target, all seven tour loops in both themes, bounded divider demonstrations, clipped event text during resize, click timing, independent seven-second overview chapters and loaded workspace captures.</span></li>
               <li>
                 <CheckIcon size={17} />
                 <span>
