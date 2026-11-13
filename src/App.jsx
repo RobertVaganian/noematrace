@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { appUrl } from "./paths.js";
 import { AuditExplorer } from "./AuditExplorer.jsx";
 import { ThemeToggle, useTheme } from "./Theme.jsx";
@@ -524,7 +525,7 @@ function Sources({ source, onClose, state }) {
   return (
     <Modal
       title="Source documents"
-      eyebrow="RN-2048 / Evidence"
+      eyebrow={`${RUN_ID} / Evidence`}
       onClose={onClose}
       className="source-modal"
     >
@@ -1011,10 +1012,10 @@ export function App() {
   };
   const copyId = async () => {
     try {
-      await navigator.clipboard.writeText("RN-2048");
+      await navigator.clipboard.writeText(RUN_ID);
       setToast("Run ID copied");
     } catch {
-      setToast("Run ID: RN-2048");
+      setToast(`Run ID: ${RUN_ID}`);
     }
   };
   return (
@@ -1103,7 +1104,7 @@ export function App() {
             <span className="crumb-divider">/</span>
             <span className="mono">
               {nav === "runs"
-                ? "RN-2048"
+                ? RUN_ID
                 : nav === "queue"
                   ? "Review queue"
                   : "Audit log"}
@@ -1343,7 +1344,7 @@ export function App() {
             </AuditExplorer>
             <button className="secondary-button" onClick={() => setNav("runs")}>
               <ArrowLeftIcon size={15} />
-              Back to run RN-2048
+              Back to run {RUN_ID}
             </button>
           </main>
         )}

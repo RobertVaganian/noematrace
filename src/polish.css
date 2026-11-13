@@ -36,8 +36,8 @@
 .modal-footer button { min-height: 44px; }
 .modal-footer .review-footer > span > svg { flex-shrink: 0; }
 .field-required { margin-left: 9px; color: var(--muted); font-size: 10px; font-weight: 400; }
-[aria-invalid="true"] { border-color: var(--orange); }
-.search-input:has([aria-invalid="true"]) { border-color: var(--orange); }
+[aria-invalid="true"] { border-color: var(--danger-ink); }
+.search-input:has([aria-invalid="true"]) { border-color: var(--danger-ink); }
 .explanation-field .field-meta { font-size: 11px; }
 @media (max-width: 640px) {
   .modal-footer { padding: 14px 18px; padding-inline-end: calc(18px + var(--modal-scrollbar, 0px)); }
@@ -600,7 +600,7 @@ select {
   white-space: nowrap;
 }
 .save-unavailable {
-  color: var(--orange);
+  color: var(--danger-ink);
 }
 .draft-save-note {
   display: flex;
