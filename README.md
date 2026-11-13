@@ -36,36 +36,36 @@ Six moments from the same review, in light and dark themes. Select a screen to s
   <tr>
     <td width="50%" valign="top">
       <strong>01 · Trace the exception</strong><br><br>
-      <a href="docs/screenshots/trace-dark.jpg?v=31"><img src="docs/screenshots/trace-dark.jpg?v=31" alt="The failed check, its source records and the execution log." width="440"></a><br>
+      <a href="docs/screenshots/trace-dark.jpg?v=32"><img src="docs/screenshots/trace-dark.jpg?v=32" alt="The failed check, its source records and the execution log." width="440"></a><br>
       <sub>The failed check, its source records and the execution log.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>02 · Review the association</strong><br><br>
-      <a href="docs/screenshots/review-light.jpg?v=31"><img src="docs/screenshots/review-light.jpg?v=31" alt="Inspect supplier, currency, amount and line items together." width="440"></a><br>
+      <a href="docs/screenshots/review-light.jpg?v=32"><img src="docs/screenshots/review-light.jpg?v=32" alt="Inspect supplier, currency, amount and line items together." width="440"></a><br>
       <sub>Inspect supplier, currency, amount and line items together.</sub>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <strong>03 · Compare the evidence</strong><br><br>
-      <a href="docs/screenshots/comparison-dark.jpg?v=31"><img src="docs/screenshots/comparison-dark.jpg?v=31" alt="Read field-level differences before testing a correction." width="440"></a><br>
-      <sub>Read field-level differences before testing a correction.</sub>
+      <a href="docs/screenshots/comparison-dark.jpg?v=32"><img src="docs/screenshots/comparison-dark.jpg?v=32" alt="Compare the original and proposed orders with the saved test result." width="440"></a><br>
+      <sub>Compare the original and proposed orders with the saved test result.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>04 · Record the decision</strong><br><br>
-      <a href="docs/screenshots/finance-light.jpg?v=31"><img src="docs/screenshots/finance-light.jpg?v=31" alt="Finance reviews one proposal and its exact test evidence." width="440"></a><br>
+      <a href="docs/screenshots/finance-light.jpg?v=32"><img src="docs/screenshots/finance-light.jpg?v=32" alt="Finance reviews one proposal and its exact test evidence." width="440"></a><br>
       <sub>Finance reviews one proposal and its exact test evidence.</sub>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <strong>05 · Keep the history</strong><br><br>
-      <a href="docs/screenshots/history-dark.jpg?v=31"><img src="docs/screenshots/history-dark.jpg?v=31" alt="Returned and approved versions retain separate decisions." width="440"></a><br>
+      <a href="docs/screenshots/history-dark.jpg?v=32"><img src="docs/screenshots/history-dark.jpg?v=32" alt="Returned and approved versions retain separate decisions." width="440"></a><br>
       <sub>Returned and approved versions retain separate decisions.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>06 · Catch source changes</strong><br><br>
-      <a href="docs/screenshots/stale-light.jpg?v=31"><img src="docs/screenshots/stale-light.jpg?v=31" alt="Changed records invalidate approval without erasing its history." width="440"></a><br>
+      <a href="docs/screenshots/stale-light.jpg?v=32"><img src="docs/screenshots/stale-light.jpg?v=32" alt="Changed records invalidate approval without erasing its history." width="440"></a><br>
       <sub>Changed records invalidate approval without erasing its history.</sub>
     </td>
   </tr>
