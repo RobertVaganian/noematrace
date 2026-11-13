@@ -31,6 +31,23 @@ test("legacy run references restore the same review and re-save with the current
   saved.runId = "RUN-261028-999";
   assert.equal(decodeReview(JSON.stringify(saved)).status, "invalid");
 });
+test("the renamed demo operator restores author fields without rewriting notes or Finance attribution", () => {
+  const state = structuredClone(showcaseScene("history").state);
+  const note = "Elena Stone checked the original document; preserve this written note.";
+  state.reason = note;
+  state.proposals.forEach(proposal => { proposal.submittedBy = "Elena Stone"; proposal.reason = note; });
+  state.audit.forEach(entry => { if (entry.actor === "Robert Vaganian") entry.actor = "Elena Stone"; });
+  const before = structuredClone(state);
+  const restored = decodeReview(encodeReview(state));
+  assert.equal(restored.status, "restored");
+  assert.ok(restored.state.proposals.every(proposal => proposal.submittedBy === "Robert Vaganian"));
+  assert.ok(restored.state.audit.some(entry => entry.actor === "Robert Vaganian"));
+  assert.ok(restored.state.audit.every(entry => entry.actor !== "Elena Stone"));
+  assert.equal(restored.state.proposals[1].decision.actor, "Marcus Hale");
+  assert.equal(restored.state.reason, note);
+  assert.ok(restored.state.proposals.every(proposal => proposal.reason === note));
+  assert.deepEqual(state, before);
+});
 test("operator draft survives reload while an interrupted test never becomes a passing result", () => {
   let state = reducer(initialState, { type: "CANDIDATE", id: "PO-732" });
   state = reducer(state, {

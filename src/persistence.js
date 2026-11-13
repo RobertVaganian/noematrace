@@ -1,5 +1,5 @@
 import { RUN_ID } from "./run-reference.js";
-import { initialState, orders } from "./model.js";
+import { initialState, orders, people } from "./model.js";
 
 export const reviewStorageKey = "noematrace.review.v1";
 const phases = [
@@ -129,7 +129,19 @@ export function decodeReview(raw) {
       !validReview(saved.state)
     )
       throw new Error("Unsupported review record");
-    const state = { ...initialState, ...saved.state, error: "" };
+    // Update the synthetic persona only in author fields; preserve written evidence.
+    const actor = name => name === "Elena Stone" ? people.operator.name : name;
+    const state = {
+      ...initialState,
+      ...saved.state,
+      error: "",
+      audit: saved.state.audit.map(entry => ({ ...entry, actor: actor(entry.actor) })),
+      proposals: saved.state.proposals.map(proposal => ({
+        ...proposal,
+        submittedBy: actor(proposal.submittedBy),
+        decision: proposal.decision && { ...proposal.decision, actor: actor(proposal.decision.actor) },
+      })),
+    };
     const interrupted = state.phase === "testing";
     if (interrupted) {
       state.phase = "idle";
