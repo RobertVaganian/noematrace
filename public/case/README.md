@@ -1,6 +1,8 @@
 # NoemaTrace case media provenance — palette refresh
 
-Current assets use actual cloud-Chrome captures at 1363×936 CSS px, with synthetic records. The demo operator is Robert Vaganian (RV). No interface region is redrawn. The pointer is parked at the lower-right, outside public compositions.
+Capture only after the scene-specific heading is visible and fonts have loaded. Inspect every saved image before publication. Media generation rejects nearly uniform loading screens before writing derived assets; media checks also inspect README images, chapter posters and decoded video frames.
+
+Current assets use actual cloud-Chrome captures from a 1363×936 CSS px viewport, capturing its upper 1363×912 px, with synthetic records. The demo operator is Robert Vaganian (RV). No interface region is redrawn. The pointer is parked in the excluded lower margin before capture; it and its highlight are absent from the saved frames.
 
 ## Two genuine themes
 
@@ -22,6 +24,6 @@ Both Before themes were re-rendered from the earlier source at commit `0b85a0843
 
 The page holds the outgoing poster underneath the incoming clip until it is ready, then fades in over 180ms. Reduced motion disables the fade. Paused chapter selection stays paused. Only explicit Play enables sequential advancement. Progress uses five live noninteractive segments, with no byte-range seek bar. A duplicate desktop description below the video has been removed; a readable text equivalent remains available to assistive technology and on small screens.
 
-Root-level media paths remain compatible copies of the current dark compositions. Earlier small crops, VTT and workspace-light.jpg are archival and unused by the current markup.
+Root-level media paths remain compatible copies of the current dark compositions. Compatible image aliases and workspace-light.jpg are refreshed from the same captures. VTT is archival and unused by the current markup.
 
 Regenerate with `node scripts/create-case-media.mjs qa/v31`. Dependencies: sharp, Python/Pillow with WOFF2 support, ffmpeg/libx264. Source captures are included in the downloadable kit for reproduction. Generate the 1200×630 branded link preview with `python3 scripts/create-og-preview.py qa/v31/03-trace-dark.jpg`.
