@@ -1,21 +1,23 @@
 <div align="center">
 
-  <img src="public/brand/logo-animated.gif" alt="NoemaTrace" width="80" style="border-radius: 14px; background: #f4f4f4; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+  <img src="public/brand/logo-animated.gif" alt="NoemaTrace animated mark" width="80" height="80">
 
   # NoemaTrace
+
   **A workspace for tracing invoice exceptions**
 
-  Portfolio project by **Robert Vaganian** · Interactive product design concept
+  Product design & working prototype by **Robert Vaganian**
 
-  [![Checks](https://github.com/RobertVaganian/noematrace/actions/workflows/checks.yml/badge.svg)](https://github.com/RobertVaganian/noematrace/actions/workflows/checks.yml)
-  [![Deploy](https://github.com/RobertVaganian/noematrace/actions/workflows/deploy.yml/badge.svg)](https://github.com/RobertVaganian/noematrace/actions/workflows/deploy.yml)
-  [![Live site](https://img.shields.io/badge/site-robertvaganian.github.io%2Fnoematrace-blue)](https://robertvaganian.github.io/noematrace/)
-  [![Node](https://img.shields.io/badge/Node-%3E%3D22.12-blue?logo=nodedotjs&logoColor=white)](https://github.com/RobertVaganian/noematrace/blob/main/.nvmrc)
-  [![Last commit](https://img.shields.io/github/last-commit/RobertVaganian/noematrace?style=flat)](https://github.com/RobertVaganian/noematrace)
-  [![Stack](https://img.shields.io/badge/React%2019%20-%20Vite%206-purple)](https://github.com/RobertVaganian/noematrace/blob/main/package.json)
+  [![Checks](https://img.shields.io/github/actions/workflow/status/RobertVaganian/noematrace/checks.yml?branch=main&label=checks&style=flat&labelColor=242831)](https://github.com/RobertVaganian/noematrace/actions/workflows/checks.yml)
+  [![Deployment](https://img.shields.io/github/actions/workflow/status/RobertVaganian/noematrace/deploy.yml?branch=main&label=deploy&style=flat&labelColor=242831)](https://github.com/RobertVaganian/noematrace/actions/workflows/deploy.yml)
+  [![React 19 and Vite 6](https://img.shields.io/badge/React_19-Vite_6-626e80?style=flat&labelColor=242831)](package.json)
+  [![Node.js 22.12 or newer](https://img.shields.io/badge/Node-%E2%89%A522.12-626e80?style=flat&labelColor=242831)](.nvmrc)
 
-  [**→ Case study & design walkthrough**](https://robertvaganian.github.io/noematrace/case-study) ·
-  [**→ Live prototype**](https://robertvaganian.github.io/noematrace/)
+  <p>
+    <a href="https://robertvaganian.github.io/noematrace/"><strong>Live prototype</strong></a>
+    &nbsp; · &nbsp;
+    <a href="https://robertvaganian.github.io/noematrace/case-study/"><strong>Case study</strong></a>
+  </p>
 
 </div>
 
@@ -34,36 +36,36 @@ Six moments from the same review, in light and dark themes. Select a screen to s
   <tr>
     <td width="50%" valign="top">
       <strong>01 · Trace the exception</strong><br><br>
-      <a href="docs/screenshots/trace-dark.jpg?v=30"><img src="docs/screenshots/trace-dark.jpg?v=30" alt="The failed check, its source records and the execution log." width="440"></a><br>
+      <a href="docs/screenshots/trace-dark.jpg?v=31"><img src="docs/screenshots/trace-dark.jpg?v=31" alt="The failed check, its source records and the execution log." width="440"></a><br>
       <sub>The failed check, its source records and the execution log.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>02 · Review the association</strong><br><br>
-      <a href="docs/screenshots/review-light.jpg?v=30"><img src="docs/screenshots/review-light.jpg?v=30" alt="Inspect supplier, currency, amount and line items together." width="440"></a><br>
+      <a href="docs/screenshots/review-light.jpg?v=31"><img src="docs/screenshots/review-light.jpg?v=31" alt="Inspect supplier, currency, amount and line items together." width="440"></a><br>
       <sub>Inspect supplier, currency, amount and line items together.</sub>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <strong>03 · Compare the evidence</strong><br><br>
-      <a href="docs/screenshots/comparison-dark.jpg?v=30"><img src="docs/screenshots/comparison-dark.jpg?v=30" alt="Read field-level differences before testing a correction." width="440"></a><br>
+      <a href="docs/screenshots/comparison-dark.jpg?v=31"><img src="docs/screenshots/comparison-dark.jpg?v=31" alt="Read field-level differences before testing a correction." width="440"></a><br>
       <sub>Read field-level differences before testing a correction.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>04 · Record the decision</strong><br><br>
-      <a href="docs/screenshots/finance-light.jpg?v=30"><img src="docs/screenshots/finance-light.jpg?v=30" alt="Finance reviews one proposal and its exact test evidence." width="440"></a><br>
+      <a href="docs/screenshots/finance-light.jpg?v=31"><img src="docs/screenshots/finance-light.jpg?v=31" alt="Finance reviews one proposal and its exact test evidence." width="440"></a><br>
       <sub>Finance reviews one proposal and its exact test evidence.</sub>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <strong>05 · Keep the history</strong><br><br>
-      <a href="docs/screenshots/history-dark.jpg?v=30"><img src="docs/screenshots/history-dark.jpg?v=30" alt="Returned and approved versions retain separate decisions." width="440"></a><br>
+      <a href="docs/screenshots/history-dark.jpg?v=31"><img src="docs/screenshots/history-dark.jpg?v=31" alt="Returned and approved versions retain separate decisions." width="440"></a><br>
       <sub>Returned and approved versions retain separate decisions.</sub>
     </td>
     <td width="50%" valign="top">
       <strong>06 · Catch source changes</strong><br><br>
-      <a href="docs/screenshots/stale-light.jpg?v=30"><img src="docs/screenshots/stale-light.jpg?v=30" alt="Changed records invalidate approval without erasing its history." width="440"></a><br>
+      <a href="docs/screenshots/stale-light.jpg?v=31"><img src="docs/screenshots/stale-light.jpg?v=31" alt="Changed records invalidate approval without erasing its history." width="440"></a><br>
       <sub>Changed records invalidate approval without erasing its history.</sub>
     </td>
   </tr>

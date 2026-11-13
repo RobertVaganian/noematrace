@@ -10,7 +10,7 @@ try { sharp = require('sharp'); } catch {
   if (!process.env.NOEMATRACE_MEDIA_NODE_MODULES) throw new Error('Media generation requires the sharp package.');
   sharp = require(`${process.env.NOEMATRACE_MEDIA_NODE_MODULES}/sharp`);
 }
-const captures = process.argv[2] || 'qa/v30';
+const captures = process.argv[2] || 'qa/v31';
 const root = process.cwd();
 const out = path.join(root, 'public/case');
 for (const theme of ['light', 'dark']) {

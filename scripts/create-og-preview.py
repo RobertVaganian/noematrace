@@ -3,7 +3,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import sys
 root=Path(__file__).resolve().parent.parent
-source=root/(sys.argv[1] if len(sys.argv)>1 else 'qa/v30/03-trace-dark.jpg')
+source=root/(sys.argv[1] if len(sys.argv)>1 else 'qa/v31/03-trace-dark.jpg')
 out=root/'public/og/noematrace.jpg'
 out.parent.mkdir(parents=True,exist_ok=True)
 frame=Image.new('RGB',(1200,630),'#14161b')

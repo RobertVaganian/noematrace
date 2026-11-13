@@ -130,8 +130,8 @@ export const baseEvents = [
 ];
 export const people = {
   operator: {
-    name: "Elena Stone",
-    initials: "ES",
+    name: "Robert Vaganian",
+    initials: "RV",
     title: "Operations reviewer",
   },
   approver: { name: "Marcus Hale", initials: "MH", title: "Finance approver" },
