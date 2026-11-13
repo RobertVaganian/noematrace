@@ -3,6 +3,7 @@ from pathlib import Path
 import unittest
 import subprocess
 import json
+import io
 from PIL import Image, ImageChops, ImageStat
 
 spec = importlib.util.spec_from_file_location("tour_scene", Path(__file__).parents[1] / "scripts/tour_scene.py")
@@ -125,6 +126,27 @@ class TourGeometryTests(unittest.TestCase):
 
 
 
+class CaseCaptureTests(unittest.TestCase):
+    def assert_loaded_workspace(self, image, label):
+        self.assertGreater(image.convert("L").entropy(), 1, f"{label}: capture contains a loading screen or blank workspace")
+
+    def test_source_captures_contain_loaded_workspaces(self):
+        root = Path(__file__).parents[1] / "qa/v31"
+        scenes = ["03-trace", "04-review", "05-comparison", "06-finance", "07-history", "08-stale", "10-canvas-earlier", "12-review-earlier"]
+        for theme in ["light", "dark"]:
+            for scene in scenes:
+                path = root / f"{scene}-{theme}.jpg"
+                with self.subTest(capture=path.name), Image.open(path) as image:
+                    self.assertEqual(image.size, (1363, 912))
+                    self.assert_loaded_workspace(image, path.name)
+
+    def test_readme_screenshots_contain_loaded_workspaces(self):
+        root = Path(__file__).parents[1] / "docs/screenshots"
+        for name in ["trace-dark", "review-light", "comparison-dark", "finance-light", "history-dark", "stale-light"]:
+            with self.subTest(screenshot=name), Image.open(root / f"{name}.jpg") as image:
+                self.assert_loaded_workspace(image, name)
+
+
 class CaseChapterTests(unittest.TestCase):
     def test_each_chapter_is_an_independent_complete_seven_second_video(self):
         root = Path(__file__).parents[1] / "public/case"
@@ -133,7 +155,10 @@ class CaseChapterTests(unittest.TestCase):
                 base = root / theme / f"chapter-{index}"
                 with Image.open(base.with_suffix(".jpg")) as poster:
                     self.assertEqual(poster.size, (1600, 1000))
-                    poster.verify()
+                    self.assertGreater(poster.crop((200, 110, 1400, 810)).convert("L").entropy(), 1, "Chapter poster contains a loading screen")
+                frame = subprocess.run(["ffmpeg", "-v", "error", "-ss", "1", "-i", str(base.with_suffix(".mp4")), "-frames:v", "1", "-f", "image2pipe", "-vcodec", "png", "pipe:1"], check=True, capture_output=True).stdout
+                with Image.open(io.BytesIO(frame)) as image:
+                    self.assertGreater(image.crop((200, 110, 1400, 810)).convert("L").entropy(), 1, "Chapter video contains a loading screen")
                 probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=width,height,r_frame_rate", "-show_entries", "format=duration", "-of", "json", str(base.with_suffix(".mp4"))], check=True, capture_output=True, text=True)
                 data = json.loads(probe.stdout)
                 self.assertEqual(float(data["format"]["duration"]), 7)
