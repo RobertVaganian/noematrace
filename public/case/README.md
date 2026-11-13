@@ -1,29 +1,37 @@
-# NoemaTrace case media provenance — palette refresh
+# NoemaTrace case-study media
 
-Capture only after the scene-specific heading is visible and fonts have loaded. Inspect every saved image before publication. Media generation rejects nearly uniform loading screens before writing derived assets; media checks also inspect README images, chapter posters and decoded video frames.
+Case-study images come from browser captures of the prototype with synthetic records. The demo Operations profile is Robert Vaganian (RV). The films arrange those captures with captions; they are edited screen walkthroughs.
 
-Current assets use actual cloud-Chrome captures from a 1363×936 CSS px viewport, capturing its upper 1363×912 px, with synthetic records. The demo operator is Robert Vaganian (RV). No interface region is redrawn. The pointer is parked in the excluded lower margin before capture; it and its highlight are absent from the saved frames.
+## Source captures
 
-## Two genuine themes
+The current source set is [qa/v31](../../qa/v31). Each image is 1363 × 912 px, captured from the upper part of a 1363 × 936 CSS px viewport after the scene heading and fonts loaded. The pointer is outside the captured area.
 
-The active case uses `light/` or `dark/`, selected by the page theme. Both include five actual screens, five independent seven-second H.264 clips with matching posters, full 35-second overview, and Before/After images. Poster, clip, frame enlargement and refinement enlargement use the same theme.
+Both light and dark themes have their own captures. Earlier interface views were rendered from source commit `0b85a0843333b8ff5fbbd2c6ef16f8486fb3937d` (v0.10.0), with the current exception palette and run reference. Their earlier layouts and interactions are retained. Earlier/current labels identify interface iterations.
 
-| Public asset in each theme directory | Current source / framing |
+| Output in each theme directory | Source and crop |
 | --- | --- |
-| canvas-current-context.webp | qa/v31/03-trace-THEME.jpg; x229 y190 w791 h718 |
-| review-current-context.webp | qa/v31/04-review-THEME.jpg; x176 y32 w1012 h872 |
-| state-1.jpg … state-5.jpg | qa/v31/03-trace,05-comparison,06-finance,07-history,08-stale-THEME.jpg; complete 1363px width, upper 900px |
+| `canvas-current-context.webp` | `03-trace-THEME.jpg`; x229 y190 w791 h718 |
+| `canvas-earlier-context.webp` | `10-canvas-earlier-THEME.jpg`; x229 y190 w791 h718 |
+| `review-current-context.webp` | `04-review-THEME.jpg`; x176 y32 w1012 h872 |
+| `review-earlier-context.webp` | `12-review-earlier-THEME.jpg`; x176 y32 w1012 h872 |
+| `state-1.jpg` through `state-5.jpg` | Trace, comparison, Finance, history and stale-evidence captures; full width, upper 900 px |
 
-The review After opens at the top of the evidence workspace, with all candidates visible and the persistent context and footer inside the complete dialog. No payment runs. The outer dialog is never cropped.
+Replace `THEME` with `light` or `dark`. The review capture includes the full dialog, candidate orders and footer.
 
-Both Before themes were re-rendered from the earlier source at commit `0b85a0843333b8ff5fbbd2c6ef16f8486fb3937d` (v0.10.0), using the current exception palette and demo run reference. The earlier layout and interactions are retained; screenshots are not recoloured or retouched. Captures are `qa/v31/10-canvas-earlier-THEME.jpg` and `qa/v31/12-review-earlier-THEME.jpg`. Earlier/current labels describe interface iterations, not a participant study.
+## Films and compatibility paths
 
-## Film
+Each theme contains five seven-second chapters with matching posters and a 35-second overview. Films are 1600 × 1000 H.264 at 60 fps, with captions below the screen image and no audio or cursor overlay.
 
-`chapter-1.mp4` through `chapter-5.mp4` are independent seven-second 1600×1000 H.264 clips at 60 fps. These are edited actual screen compositions, not a continuous live interaction recording. Captions occupy their own lower rail. The original NoemaTrace mark appears in the upper brand rail; there is no decorative cursor, audio, autoplay or native subtitle overlay.
+The case page uses the directory matching its active theme. Root-level media paths are compatibility copies of the dark compositions; `workspace-light.jpg` uses the light trace capture. The VTT file is retained for earlier exports and is unused by the current page.
 
-The page holds the outgoing poster underneath the incoming clip until it is ready, then fades in over 180ms. Reduced motion disables the fade. Paused chapter selection stays paused. Only explicit Play enables sequential advancement. Progress uses five live noninteractive segments, with no byte-range seek bar. A duplicate desktop description below the video has been removed; a readable text equivalent remains available to assistive technology and on small screens.
+## Regeneration
 
-Root-level media paths remain compatible copies of the current dark compositions. Compatible image aliases and workspace-light.jpg are refreshed from the same captures. VTT is archival and unused by the current markup.
+Run from the repository root after installing the frontend dependencies. Media generation also needs sharp, Python/Pillow with WOFF2 support and ffmpeg with libx264.
 
-Regenerate with `node scripts/create-case-media.mjs qa/v31`. Dependencies: sharp, Python/Pillow with WOFF2 support, ffmpeg/libx264. Source captures are included in the downloadable kit for reproduction. Generate the 1200×630 branded link preview with `python3 scripts/create-og-preview.py qa/v31/03-trace-dark.jpg`.
+```sh
+node scripts/create-case-media.mjs qa/v31
+python3 scripts/create-og-preview.py qa/v31/03-trace-dark.jpg
+npm run test:media
+```
+
+The generator checks capture dimensions and rejects nearly uniform loading screens before writing derived assets. Inspect the resulting images and films before publication.

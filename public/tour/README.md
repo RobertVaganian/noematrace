@@ -1,19 +1,30 @@
-# NoemaTrace interface tour media
+# NoemaTrace interface-tour media
 
-Generated UI illustrations, not screenshots or live review results. Regenerate from the repository root with `python3 scripts/create-tour-media.py`.
+The tour uses UI illustrations drawn by the media scripts. They explain gestures and review states; they do not read or modify review data.
 
-The four-second loops use the existing Inter font and Phosphor icons. Motion eases in and out, with pauses to read each example and matching loop endpoints. Artwork is 720 × 352 px. H.264 MP4 at 60 fps provides smooth playback and actual frame pause/resume. GIF alternatives use 20 ms frames (50 fps before identical-frame optimization); PNG posters provide meaningful reduced-motion stills. GIF fallback pause uses the poster. Each theme has all seven examples and all three formats.
+Each of the seven topics has light and dark variants: mismatch, navigation/Fit, source evidence, workspace resizing, test checks, Finance decisions and source freshness. The illustrations use Inter and Phosphor icons. Phosphor attribution is in [PHOSPHOR-LICENSE.txt](PHOSPHOR-LICENSE.txt).
 
-Dependencies: Pillow with WOFF2 font support, Node, installed frontend dependencies, sharp and ffmpeg with libx264. No review data is read or modified. Phosphor attribution is in PHOSPHOR-LICENSE.txt.
+## Formats and behavior
 
-The pointer uses the installed Phosphor cursor silhouette with a solid white fill and crisp dark outline; the pan hand uses the same neutral treatment. No glow or colored cursor trail.
+Artwork is 720 × 352 px. Four-second loops use eased movement and reading pauses. H.264 MP4 at 60 fps is the primary format and supports pause/resume. GIF alternatives use 20 ms frames; PNG posters provide static examples for reduced motion and paused GIF fallback.
 
-The seven topics are mismatch, navigation/Fit, source evidence, resizing the workspace, read-only test checks, Finance decisions with version history, and stale source evidence. New view-only examples use the same Inter/Phosphor style and four-second timing. `workspace` illustrates both dividers and their reset; `decision` shows version-specific correction approval; the accompanying tour text and accessible description distinguish it from payment execution; `freshness` retains the tested snapshot while a newer ERP version requires fresh review.
+The workspace example keeps log rows inside the panel while the divider moves. The decision example distinguishes returned and approved versions. The freshness example keeps the tested snapshot beside the newer source version. Tour copy and accessible descriptions explain the approval scope.
 
-Regenerate selected examples with `python3 scripts/create-tour-media.py workspace decision freshness`. Tour media uses the `minimal-4s-v29` asset revision. All seven illustrations were revised in iteration28; the last three were simplified in iteration29; native video pause/resume remains the primary path, with GIF/PNG fallbacks.
+The current asset revision is `minimal-4s-v29`. Regenerate MP4, GIF and PNG files together when changing an illustration.
 
-Iteration28 uses a consistent reading rhythm, a real minus/plus/Fit group, a cursor clear of comparison labels, explicit read-only test/pending states, version-specific decisions and preserved historical snapshots. Numeric values and status labels stay legible while their surrounding emphasis changes. The workspace example derives its event-row opacity from the actual Inter text bounds and remaining space, and clips all log contents inside the panel. The row disappears while there is still bottom padding, rather than crossing the border. A pixel regression scans every encoded workspace GIF frame below that border.
+## Regeneration
 
-Iteration29 removes redundant footer explanations from review, decision and freshness artwork. The last three panels share quieter spacing. Decision shows v1/v2 with statuses and small icons, without test IDs, version counts or a wide approval fill. Freshness retains both compared versions and an inline result, without a second outlined warning banner. All explanatory and payment-boundary details remain in tour copy and accessible descriptions. Step4 clipping and timing are unchanged.
+Run from the repository root after installing the frontend dependencies. Additional requirements are Pillow with WOFF2 support, sharp and ffmpeg with libx264.
 
-The current media uses the muted-plum exception palette from the workspace in both themes. Waiting states retain a separate amber role. Regenerate the MP4, GIF and PNG variants together with `python3 scripts/create-tour-media.py`.
+```sh
+python3 scripts/create-tour-media.py
+npm run test:media
+```
+
+To regenerate only selected topics:
+
+```sh
+python3 scripts/create-tour-media.py workspace decision freshness
+```
+
+Media tests cover timing, Fit bounds, divider limits, click targets and log-row clipping. Inspect both themes after regeneration.
