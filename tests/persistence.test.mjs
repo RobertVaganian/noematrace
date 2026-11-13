@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { initialState, reducer } from "../src/model.js";
 import { showcaseScene } from "../src/showcase.js";
+import { RUN_ID } from "../src/run-reference.js";
 import {
   encodeReview,
   decodeReview,
@@ -17,6 +18,18 @@ test("round-trip preserves returned/approved versions, source changes and exact 
   assert.deepEqual(recovered.state, state);
   assert.equal(recovered.state.proposals[1].status, "outdated");
   assert.equal(recovered.state.proposals[1].decision.testId, "TST-002");
+});
+test("legacy run references restore the same review and re-save with the current reference", () => {
+  const state = showcaseScene("history").state;
+  const saved = JSON.parse(encodeReview(state));
+  assert.equal(saved.runId, RUN_ID);
+  saved.runId = "RN-2048";
+  const restored = decodeReview(JSON.stringify(saved));
+  assert.equal(restored.status, "restored");
+  assert.deepEqual(restored.state, state);
+  assert.equal(JSON.parse(encodeReview(restored.state)).runId, RUN_ID);
+  saved.runId = "RUN-261028-999";
+  assert.equal(decodeReview(JSON.stringify(saved)).status, "invalid");
 });
 test("operator draft survives reload while an interrupted test never becomes a passing result", () => {
   let state = reducer(initialState, { type: "CANDIDATE", id: "PO-732" });
