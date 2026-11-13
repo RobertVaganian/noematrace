@@ -1,6 +1,6 @@
 export const connectionPalette = {
-  dark: { line: "#8993a5", focus: "#b8cae8", conflict: "#e49c8d" },
-  light: { line: "#748097", focus: "#405e8e", conflict: "#a64b3e" },
+  dark: { line: "#8993a5", focus: "#b8cae8", conflict: "#c4a6ba" },
+  light: { line: "#748097", focus: "#405e8e", conflict: "#71546b" },
 };
 
 // Reserve space for canvas controls when the log leaves a shorter graph pane.

@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { appUrl } from "./paths.js";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
@@ -30,7 +31,7 @@ function Refinement({ item, onEnlarge }) {
   const { theme } = useTheme();
   const [version, setVersion] = useState("current");
   const label = version === "current" ? "Current prototype" : "Earlier iteration";
-  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=26`);
+  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=30`);
   return <article>
     <h3>{item.title}</h3><p>{item.text}</p>
     <div className="case-evidence-toolbar">
@@ -42,7 +43,7 @@ function Refinement({ item, onEnlarge }) {
     </div>
     <figure className="case-context-image">
       <button type="button" onClick={() => onEnlarge({ src, alt: item[version], title: `${item.title} ${label}` })} aria-label={`Enlarge ${label.toLowerCase()}: ${item.title}`}>
-        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=26`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
+        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=30`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
       </button>
       <figcaption>{version === "current" ? item.current : item.earlier}</figcaption>
     </figure>
@@ -54,7 +55,7 @@ function Refinements() {
   return <div className="case-refinements">
     <span className="case-eyebrow">Refined through browser inspection</span>
     {refinements.map(item => <Refinement key={item.id} item={item} onEnlarge={setEnlarged} />)}
-    <p className="case-refinement-scope">Actual prototype screens from earlier and current iterations. These changes address observed interface issues; their effect on user comprehension has not been measured.</p>
+    <p className="case-refinement-scope">Actual prototype screens from earlier and current iterations, re-rendered with the current status palette and demo run reference. These changes address observed interface issues; their effect on user comprehension has not been measured.</p>
     {enlarged && <Modal title={enlarged.title} eyebrow="Interface refinement" className="case-image-modal" onClose={() => setEnlarged(null)}>
       <img src={enlarged.src} alt={enlarged.alt} />
     </Modal>}
@@ -76,7 +77,7 @@ function OverviewFilm({ onExpand }) {
   const [active, setActive] = useState(0), [visit, setVisit] = useState(0);
   const [playing, setPlaying] = useState(false), [elapsed, setElapsed] = useState(0), [error, setError] = useState(false);
   const [ready, setReady] = useState(false);
-  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=26`);
+  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=30`);
   const previous = useRef({ poster, theme, active, visit });
   const [outgoing, setOutgoing] = useState(poster);
   const clock = value => `0:${String(Math.floor(value)).padStart(2, "0")}`;
@@ -131,7 +132,7 @@ function OverviewFilm({ onExpand }) {
         onEnded={event => { if (!currentMedia(event)) return; setElapsed(7); progress.current?.style.setProperty("--chapter-progress", 1); if (intent.current && active < 4) choose(active + 1); else { intent.current = false; setPlaying(false); } }}
         onError={event => { if (currentMedia(event)) { setReady(true); setError(true); intent.current = false; setPlaying(false); } }}
         aria-label={`Chapter ${active + 1}: ${overviewChapters[active].name}. Seven-second silent screen walkthrough.`} aria-describedby="case-film-description">
-        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=26`)} type="video/mp4" />
+        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=30`)} type="video/mp4" />
         Read the complete walkthrough below.
       </video>
     </div>
@@ -164,7 +165,7 @@ function Overview() {
       <p>Playback is an edited sequence of actual screens, not a live review session. It does not change your review.</p>
     </details>
     {expanded !== null && <Modal title={overviewChapters[Math.min(4, Math.floor(expanded / 7))].name} eyebrow="Actual prototype screen" className="case-image-modal case-frame-modal" onClose={() => setExpanded(null)}>
-      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=26`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
+      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=30`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
       <p>{overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail}</p>
     </Modal>}
   </section>;
@@ -222,7 +223,7 @@ function ProductView({ scene = "trace", description, compact = false }) {
           <CircleIcon size={6} weight="fill" />
           NoemaTrace /{" "}
           {scene === "trace"
-            ? "Run RN-2048"
+            ? `Run ${RUN_ID}`
             : scene === "history"
               ? "Proposal history"
               : "Context review"}
@@ -610,7 +611,7 @@ export function CaseStudy() {
               <li>
                 <CheckIcon size={17} />
                 <span>
-                  <strong>89 automated behavior checks</strong> cover evidence
+                  <strong>94 automated behavior checks</strong> cover evidence
                   matching, roles, revisions, stale results, version-specific
                   decisions, export, local recovery, field differences and
                   state-aware review guidance, seven-step tour recovery, placement, isolated navigation preferences, cancellation of interrupted UI motion, event-to-step navigation, panel-size limits, keyboard resizing, isolated layout preferences and migration of saved tour progress.

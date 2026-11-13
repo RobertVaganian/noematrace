@@ -25,7 +25,7 @@ export const tourSteps = [
     media: "freshness", alt: "Example: the ERP record changes from v1.4 to v1.5. The earlier snapshot is retained, but a fresh test is required." },
 ];
 export const tourStepCount = tourSteps.length;
-export const tourMediaRevision = "minimal-4s-v29";
+export const tourMediaRevision = "minimal-4s-v30";
 
 export function tourTargetSelectors(item, compact) {
   return [...new Set([compact && item.compactTarget, item.target, '[data-tour="guide"]'].filter(Boolean))];

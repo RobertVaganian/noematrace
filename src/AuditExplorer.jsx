@@ -1,3 +1,4 @@
+import { RUN_ID } from "./run-reference.js";
 import { useId, useMemo, useState } from "react";
 import {
   MagnifyingGlassIcon,
@@ -41,7 +42,7 @@ export function AuditExplorer({ events, state, children }) {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = `NoemaTrace-RN-2048-${format === "json" ? "review.json" : "events.csv"}`;
+    link.download = `NoemaTrace-${RUN_ID}-${format === "json" ? "review.json" : "events.csv"}`;
     document.body.append(link);
     link.click();
     link.remove();
@@ -132,7 +133,7 @@ export function AuditExplorer({ events, state, children }) {
       {exportOpen && (
         <Modal
           title="Export review record"
-          eyebrow="RN-2048 / Records"
+          eyebrow={`${RUN_ID} / Records`}
           onClose={() => setExportOpen(false)}
           className="export-modal"
         >
