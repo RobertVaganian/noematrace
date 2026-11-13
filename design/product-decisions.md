@@ -49,7 +49,7 @@ These checks establish implemented behavior. They do not establish that operator
 
 ## Review polish / v0.4
 
-The phone screenshot exposed clipped table columns and inconsistent status label alignment. Narrow screens now use a semantic event list, while desktop retains the dense table with a reserved icon column. All six graph nodes fit a compact dependency layout at initial load. Theme selection changes presentation only and persists locally; it never resets a draft or creates a decision. Light surfaces, text and status colors have explicit counterparts; document records retain their paper presentation. The graph border is muted slate-blue, with warning meaning still stated by text and an orange icon.
+The phone screenshot exposed clipped table columns and inconsistent status label alignment. Narrow screens now use a semantic event list, while desktop retains the dense table with a reserved icon column. All six graph nodes fit a compact dependency layout at initial load. Theme selection changes presentation only and persists locally; it never resets a draft or creates a decision. Light surfaces, text and status colors have explicit counterparts; document records retain their paper presentation. The graph border is muted slate-blue, with exception meaning still stated by text and a muted-plum icon.
 
 ## Financial review and audit / v0.5
 
