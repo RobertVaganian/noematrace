@@ -1,145 +1,68 @@
 # NoemaTrace — product decisions
 
-Status: self-initiated product design concept, interactive prototype 0.13. This document records design reasoning and implementation evidence. It does not report user-research findings or business outcomes.
+NoemaTrace is a self-initiated product design concept. These notes explain the current prototype's workflow, interface choices and open questions. The package version is recorded in [package.json](../package.json).
 
-## Product hypothesis
+## The review scenario
 
-An operations reviewer needs to turn a blocked automated invoice run into an evidence-backed correction that a finance approver can inspect. Showing execution events is only one part of that task. The proposed value is the controlled transition from diagnosis to a tested correction and a version-specific human decision.
+Invoice INV-2048 for EUR 12,480 is linked to PO-731 for EUR 1,248. The invoice has no purchase order reference. PO-732 matches its supplier, currency, total and line items; PO-733 has the right total but a different supplier and items.
 
-Demand, frequency of this workflow and fit with existing operations tools remain hypotheses.
+Operations investigates the mismatch, tests a proposed association and submits it to Finance. Finance reviews that version and approves it or returns it with a note. Approval records a correction; the original run stays paused before payment.
 
-## Main scenario
+The product hypothesis is that keeping the failed check, source documents and proposal together will make this review easier to follow. Demand for the workflow and its fit with existing tools still need validation.
 
-Invoice INV-2048 is associated with PO-731. Their totals differ by EUR 11,232.00. The invoice has no PO reference, so the reviewer must compare other evidence. PO-732 matches supplier, currency, total and all line items. PO-733 has the same total but another supplier and different items.
+## Workflow decisions
 
-The reviewer tests a proposed association, submits it and receives an independent finance decision. If finance requests changes, the reviewer creates another version. If ERP evidence changes later, the earlier test and approval cannot be reused.
-
-## Decisions and tradeoffs
-
-| Decision | Reason | Tradeoff / limit |
+| Decision | Reason | Tradeoff |
 | --- | --- | --- |
-| Keep the original run separate from the proposal | Preserve the evidence behind the failure and allow comparison | The interface must explicitly distinguish an approved correction from completed execution |
-| Require four checks, not amount matching alone | Equal totals can still connect unrelated documents | The prototype uses strict, ordered line matching; a production reconciliation model needs broader rules |
-| Capture a submitted source snapshot | Reviewers need to know what evidence supported a decision at that moment | A historical snapshot must be labelled when current evidence differs |
-| Link decisions to version and test IDs | Prevent a decision for one proposal from silently applying to another | More versions require a readable history |
-| Separate proposer and approver actions | Make responsibility and decision authority visible | Demo role switching is not real authorization; enforcement would be server-side in a deployed product |
-| Invalidate evidence after source changes or access loss | The approver cannot rely on unavailable or changed evidence | The demo invalidates conservatively with one evidence epoch; production should track affected records |
-| Require a note for approval or return | Preserve the reason for the human decision | Adds writing effort; usefulness and required length need testing |
-| Stop before payment execution | Keep the demonstrated decision boundary explicit | Execution continuation, idempotency and payment reconciliation remain outside this prototype |
-| Use a graph with a persistent inspector and an events alternative | Support both dependency inspection and chronological reading | Graph comprehension is an unvalidated design hypothesis |
-| Use neutral surfaces and restrained semantic color | Keep document amounts, provenance and actions visually legible | The palette is a design choice; its usability has not been established through research |
+| Keep the original run beside the proposal | Preserve the failure context while reviewing a correction | An approved proposal must remain distinct from completed execution |
+| Check supplier, currency, total and line items | A matching amount can connect unrelated documents | Line items are compared in order; real reconciliation would need broader rules |
+| Save the submitted source snapshot | Make the evidence behind each decision inspectable | Historical snapshots must be distinguished from current records |
+| Attach decisions to a proposal version and test | Keep an earlier approval from applying to a revision | More versions make history harder to scan |
+| Separate Operations and Finance actions | Make the handoff and decision responsibility visible | Role switching is simulated; production authorization needs a server |
+| Require a fresh test after source changes or access loss | Prevent approval based on outdated or unavailable evidence | The prototype invalidates evidence conservatively; a production system should track affected records |
+| Require a decision note | Keep the reason for an approval or return | The writing effort and minimum useful detail need testing |
+| Stop before payment execution | Give correction approval a clear scope | Payment execution and reconciliation are outside the prototype |
 
-## What was actually checked
+## Interface decisions
 
-- Model tests exercise misleading equal totals, required evidence, stale asynchronous results, version-specific decisions, role restrictions, source updates, access loss and revision history.
-- Browser walkthrough: v1 returned with a note; v2 tested, resubmitted and approved; both decisions and snapshots remain inspectable.
-- Browser walkthrough: later ERP update invalidates approval; an inaccessible invoice shows an unavailable state instead of a document.
-- Keyboard and compact-screen checks include focus restoration and decision-state announcements.
+The dependency graph shows where the run stopped. A persistent inspector holds the selected step's details, and the execution log offers a chronological view. An evidence-first layout remains an alternative to test if the graph slows diagnosis.
 
-These checks establish implemented behavior. They do not establish that operators will understand the workflow or prefer it to their current process.
+Invoice and order comparisons put supplier, currency, amounts and line items side by side. Proposal history uses the same comparison structure for revisions and source changes. Unavailable source bodies stay hidden in the interface and exports.
 
-## Remaining product questions
+Light and dark themes share status labels and icons. Muted plum identifies mismatched evidence, blue marks selection and amber indicates waiting. Tabular figures align money values. Compact layouts stack comparisons and use event cards to keep details readable.
 
-1. Can operators identify the next safe action without interpreting graph topology first?
-2. Does the original mismatch beside an approved proposal clearly communicate that execution is still paused?
-3. Do approvers notice source freshness and distinguish snapshots from current records?
-4. Is a decision note useful for routine approvals, or should requirements vary by risk?
-5. What evidence is sufficient when a supplier has several equally plausible matching orders?
+The seven-step tour introduces navigation, evidence, resizing, testing, decisions and source changes. It can be skipped or replayed. Its illustrations explain an action without entering evidence or making a review decision. Motion can be paused, with static examples for reduced motion.
 
+Panels can be resized, and Fit restores the graph viewport. Keyboard controls, focus restoration and inline validation support recovery from an error. Layout, theme and tour preferences are stored separately from the review.
 
-## Review polish / v0.4
+## Storage and implementation limits
 
-The phone screenshot exposed clipped table columns and inconsistent status label alignment. Narrow screens now use a semantic event list, while desktop retains the dense table with a reserved icon column. All six graph nodes fit a compact dependency layout at initial load. Theme selection changes presentation only and persists locally; it never resets a draft or creates a decision. Light surfaces, text and status colors have explicit counterparts; document records retain their paper presentation. The graph border is muted slate-blue, with exception meaning still stated by text and a muted-plum icon.
+Review drafts, submitted snapshots and decisions are saved in the current browser. Interrupted tests require another run; incompatible or corrupt saved data is rejected. This provides local recovery, without cross-device synchronization.
 
-## Financial review and audit / v0.5
+Records are synthetic. The app has no live ERP, banking integration or server-enforced roles. CSV exports the visible audit events; JSON includes review versions and evidence snapshots. Unavailable document bodies are omitted from exports.
 
-A review of the latest screenshot identified weak money typography and an awkward compact N. The interface now uses locally hosted Inter, tabular lining figures and separate aligned currency/number columns. Uniform financial rows give Invoice, Order and Difference the same comparison structure. A compact interlocking-path mark replaces the letter; it represents a trace and a linked record without adding a decorative app tile.
+## Verification
 
-Search, event-type filters and chronological sorting help inspect a growing review history. CSV exports only the currently visible events, while JSON retains the complete review, submitted versions, test identities and evidence snapshots. Unavailable document bodies are omitted from all exported snapshots; their IDs and versions remain. Content and redaction behavior have automated checks. The browser's download-event helper timed out, so successful file arrival is not claimed as browser-verified.
+The repository's [behavior tests](../tests) cover evidence matching, role restrictions, revisions, source changes, access loss, exports and local recovery. Tour and media checks cover animation geometry, clipping and loaded captures.
 
-Participant recruitment is still pending. Expert inspection, browser walkthroughs and automated checks are documented separately from the still-open questions about operator comprehension and usefulness.
+Recorded browser walkthroughs cover a returned v1 followed by an approved v2, a later ERP update, unavailable source documents, keyboard interaction and compact layouts. These checks support the implemented behavior. Participant usability sessions and measured business outcomes are still outstanding.
 
-## Continued review and exact differences / v0.6
+See the [usability plan](validation-plan.md) for proposed tasks and observations. Media sources and reproduction commands are documented in the [case media notes](../public/case/README.md) and [tour media notes](../public/tour/README.md).
 
-The light phone screenshot exposed a discoverability gap: a movable graph looked static. A dedicated navigation strip keeps a drag instruction visible; a user-triggered short pan returns to its original position. Zoom and reset controls stay visible. Reduced-motion users receive static guidance. The strip occupies layout space and must never overlap nodes or the execution log.
+## Questions for usability sessions
 
-The synthetic review now persists on the same browser/device. This includes operator drafts, immutable submitted snapshots, decisions and pending finance notes. The approval acknowledgement remains transient; an interrupted test returns to an editable state and must be run again. Corrupt/incompatible records fail closed, unavailable storage is disclosed, and showcase/capture views stay isolated. Local saving is not cross-device sync, production authorization or ERP persistence.
+1. Can reviewers find the next action without interpreting the graph first?
+2. Is it clear that correction approval leaves the original run paused?
+3. Do approvers distinguish a saved snapshot from current source data?
+4. Does a required note help routine approvals enough to justify the effort?
+5. What evidence is sufficient when several purchase orders look plausible?
 
-Proposal comparison shows changed explanations and document fields rather than forcing reviewers to inspect snapshots from memory. A separate current-source comparison explains why evidence became outdated. Unavailable source bodies remain hidden. Softer radii are consistent across controls, nodes and dialogs; the chosen neutral layout, typography and semantic color remain.
+## Related workflows
 
+Camunda Operate, n8n and UiPath Action Center provide relevant context for incident recovery and human review:
 
-## Clear gesture feedback and document navigation / v0.7
+- [Camunda: resolve incidents and update variables](https://docs.camunda.io/docs/components/operate/userguide/resolve-incidents-update-variables/)
+- [n8n: workflow executions](https://docs.n8n.io/workflows/executions/all-executions/)
+- [UiPath: Action Center introduction](https://docs.uipath.com/action-center/automation-cloud/latest/user-guide/introduction)
 
-The effect of Show me was unclear during interface review. The interaction is now labelled Show gesture, moves the real viewport over 1.6 seconds and gives explicit completion guidance with Replay. It remains optional and interruptible. Keyboard focus stays on the control during playback; reduced-motion users retain static guidance.
-
-Measurement found aligned account-control centers but mismatched 30/36 px sizes. Both controls now have 40 px hit areas and the role avatar uses a centered 32 px initials circle. The avatar and menu preserve the synthetic role identity. Escape dismisses the profile menu and restores focus.
-
-Inside a submitted proposal, Document versions switches between the exact tested snapshot and the current read-only source. Metadata identifies the active version and its relationship to the test. Current viewing never replaces submitted evidence, and source availability gates both modes. Three additional behavior tests cover these boundaries.
-
-
-## Readable dependency directions / v0.8
-
-Screenshot inspection exposed weak direction cues: small open arrowheads, thin strokes and reduced opacity on downstream links. The graph now uses filled library arrowheads, non-scaling 1.9/2.4 px strokes and separate neutral/focused palettes. Marker dimensions compensate for viewport zoom, retaining an approximately 8 px arrow length. A quieter dot grid stays subordinate to the connections.
-
-Uniform 76 px node bodies align row centers and remove tiny unnecessary elbows. The desktop order input enters the comparison from the left instead of behind its Conflict label. Compact columns use the full existing fit width with a 34 px gap, without reducing text scale. Direct connections of the selected node are highlighted and input/output counts are shown; all other dependencies stay visible. These cues describe dependency structure, not resumed execution or payment authorization.
-
-Three additional checks cover adjacency, retained direction/ports and connection contrast in both themes. The portfolio case reports 41 behavior checks; hosting checks remain separate.
-
-## Iteration 9 / finish the review path
-
-Direct invoice/order comparison removes the need to remember quantities and unit prices while switching documents. It reuses the field-difference anatomy from version history. Differences-only is the initial filter; matching records expose a concise match state with a route to all fields. Document IDs are excluded because an invoice and order deliberately have different identifiers. Line comparison remains positional and is labelled accordingly. Draft comparisons use current records; test and proposal comparisons use exact captured records. Source access gates values and mismatch counts before rendering.
-
-An optional guide introduces Inspect, Test, Submit and Decide. A pure state selector chooses the next action from the current review; it never performs a test or decision. An explicit demo action hands a submitted proposal to Finance. Access loss and stale evidence take precedence over any previous success. Completion leads to decision history and states that the original workflow remains paused. The case entry opens the guide, while ordinary workspace entry remains direct.
-
-Compact browser inspection exposed clipped values in the old two-column branch result. Below 560 px the branches stack, retaining tabular numbers and full currency/amount values. This is an observed layout correction; no participant validation is implied.
-
-
-## Iteration 10 / brand balance, canvas and controls
-
-Three screenshots identify a left-biased desktop brand lockup, a low-visibility light canvas, border-only selection and perceived toolbar/avatar imbalance. The adjustment stays within the selected layout: center the existing mark/name together, use Geist for the wordmark while keeping Inter for application copy, give selection a restrained slate fill, and maintain a 1.5 CSS px dot diameter while zooming. Dot spacing increases to 20 source units and the label names empty space explicitly. Existing filled arrowheads stay dominant.
-
-All three account controls share 40 px boxes; compass and theme icons share 20 px slots. Avatar text uses a separate glyph span with a 0.5 px optical adjustment, rather than treating the centered line box as sufficient evidence of visual centering. Verification includes rendered pixel bounds, both themes and compact rails.
-
-Competitive context: this is a focused concept within an existing product category. Camunda Operate documents diagnosis, variable correction and retry; n8n documents failed-execution retry; UiPath Action Center documents invoice workflows requiring human validation. These establish comparable mechanisms, not a claim that NoemaTrace is an original category or that any vendor lacks an equivalent feature. Its portfolio value is the implemented evidence/version/decision scenario; independent demand remains unvalidated.
-
-Primary references checked 1 Nov 2026:
-- https://docs.camunda.io/docs/components/operate/userguide/resolve-incidents-update-variables/
-- https://docs.n8n.io/workflows/executions/all-executions/
-- https://docs.uipath.com/action-center/automation-cloud/latest/user-guide/introduction
-
-
-## Iteration 11 / direct manipulation and a clear recovery action
-
-Repeated interface review showed that the gesture demonstration did not communicate its effect. The current design removes the animation, Replay and their state completely. A static instruction now says to click and hold empty space before dragging; a coarse-pointer CSS variant names touch. The existing graph reset is exposed as a labelled Fit action beside zoom controls. It restores the responsive fitted viewport, cancels ongoing library viewport motion with an immediate setViewport call, and preserves the selected step and all review state. This is an explicit recovery action, not another onboarding feature.
-
-A broader screen inspection found insufficient separation between event status and details. The table now gives the status a minimum column width and right padding. Events uses full event cards below a working-panel width of 680 px, even on a desktop with an inspector. The inspector and overall layout remain. The mobile reviewer context now uses an icon/text grid after inspection exposed an orphaned icon row. Document, comparison and finance values remain intact; no unrelated feature was added.
-
-The export footer inspection also exposed a broad Audit log secondary-button margin leaking into a nested dialog. The margin now targets only the direct Back to run button; export actions share a 40 px row.
-
-## Final form and keyboard polish / 0.12
-
-A browser walkthrough exposed that the test action could be clipped at the bottom of a long form and an error left keyboard focus on the action. Review actions now sit outside the scrolling evidence. Errors appear with the affected order picker or required explanation, describe their limits in advance and move focus after an explicit attempt. Finance note and acknowledgement errors follow the same pattern. This improves recovery without selecting evidence, generating explanations or making decisions for the reviewer.
-
-Run and source tabs now use roving focus and linked panels, following the existing case tab convention. The app and case are separate JavaScript chunks. Shared CSS and fonts remain eagerly loaded in their established order: an initial split exposed a moved sidebar case link, which was corrected during the layout pass. Browser inspection and build output support these changes; no measured real-user load-time or participant-comprehension claim is made.
-
-## Interface onboarding / 0.13
-
-The tour uses compact coachmarks with looping previews and a Next action. Four coachmarks connect a concise explanation to the real comparison, canvas controls, evidence panel (Details on phones) and compass. The GIFs are generated UI illustrations using the existing Inter and Phosphor system, labelled Preview. This separates a readable gesture example from the confusing earlier animation of the actual canvas.
-
-The tour starts for a new pristine review and resumes an unfinished step. Completed or skipped tours stay closed. Existing work and explicit showcase/guide entry are respected; replay is available through the guide. Onboarding preferences use their own key, so a replay cannot overwrite the working review. The final action is taken from the existing state-aware guide, with no automatic evidence entry, test or human decision.
-
-Native dialog behavior provides focus containment and Escape. Cards are placed beside the actual visible anchor and clamped to the viewport. Motion can be paused, and reduced motion starts with matching static artwork. These are implemented behaviors checked through browser walkthroughs and automated preference/layout tests; visitor comprehension has not been validated with participants.
-
-
-## Tour legibility and navigation / 0.14
-
-Inspection measured the original desktop artwork at 288 × 119 px; its 8–14 px source text became too small. The new card is at most 440 px with artwork about 400 × 196 px on desktop and 328 × 160 px at a 390 px viewport. Larger 11–18 px source type and shorter prose improve the example itself, rather than simply stretching the old small labels. Motion uses a six-second cycle with reading holds, eased movement and matched endpoints. The tour retains the GIF-like visual format. Lightweight 60 fps MP4 loops support actual pause/resume; 50 fps GIFs and PNGs remain fallbacks. Controls sit below the illustration to avoid obscuring evidence. Expand supports closer inspection without advancing the tour or review.
-
-Navigation can collapse to a desktop icon rail or be hidden on compact layouts. A persistent 40 px header control restores it. The separate preference respects isolated illustrations. These changes free working space while preserving the chosen sidebar/graph/inspector/log layout and actual review state. Real authentication, ERP integration and server history remain outside the concept; a useful next production milestone is one real source integration with server-enforced roles, not more decorative dashboard features.
-
-
-## Motion as feedback / 0.15
-
-Motion follows a shared interaction rhythm across the interface. Small changes use 110 ms color/stroke transitions; windows enter over 180 ms with at most 8 px movement and a 0.985 initial scale. The mobile inspector uses a 12 px horizontal entry. Profile and toast exits are retained only for 120 ms and become inert; reopening or unmounting cancels the old completion callback. Navigation width changes over 200 ms while preserving the graph's existing resize/Fit logic. The full brand lockup remains centered as its wordmark collapses.
-
-Tab underlines are measured from the actual active button, including font changes and count badges, so motion does not introduce alignment drift. New content enters together. Numeric values, graph geometry, source-permission gating and real reducer transitions remain direct. The read-only test and human decisions never wait on motion; Fit stays immediate. Native close buttons, Cancel and Escape share the animated dismissal path. Reduced motion and isolated illustrations disable both CSS and JavaScript motion. No dependency or motion-library bundle was added.
+These references describe comparable mechanisms. The questions above concern this prototype's specific review flow.

@@ -1,6 +1,6 @@
 # NoemaTrace — planned usability sessions
 
-Status: optional future plan. Participant access is currently unavailable. No sessions or participant results are claimed. Current evaluation consists of interface inspection, technical tests and browser walkthroughs. Participant sessions are still pending. User comprehension remains unvalidated.
+These sessions are planned and have not been conducted. Current evaluation consists of interface inspection, technical tests and browser walkthroughs. The sessions below would test whether operations reviewers and finance approvers understand the workflow.
 
 ## Participants and setup
 
