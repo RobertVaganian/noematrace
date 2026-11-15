@@ -21,6 +21,7 @@ import {
 } from "./ProposalReview.jsx";
 import { IconButton, Modal, DialogCloseButton, DocumentRecord, Money, DataText, moveTabFocus } from "./components.jsx";
 import { Review } from "./Review.jsx";
+import { OrderMatcher } from "./OrderMatcher.jsx";
 import { ReviewGuide } from "./ReviewGuide.jsx";
 import { MotionPresence, TabIndicator, uiDuration, useAnimatedDismiss, useCompactNavigation } from "./Motion.jsx";
 import { InterfaceTour } from "./InterfaceTour.jsx";
@@ -850,7 +851,7 @@ export function App() {
   const [tourStep, setTourStep] = useState(() => {
     let preference = null;
     try { preference = readTour(localStorage); } catch { /* Storage may be blocked. */ }
-    return initialTourStep(location.search, preference, recovery.state || scene.state);
+    return new URLSearchParams(location.search).get("match") === "1" ? null : initialTourStep(location.search, preference, recovery.state || scene.state);
   });
   const [tourLayout, setTourLayout] = useState(0);
   const compactNavigation = useCompactNavigation();
@@ -870,8 +871,10 @@ export function App() {
   const focusSequence = useRef(0);
   const [modal, setModal] = useState(
     persistenceEnabled && new URLSearchParams(location.search).get("guide") === "1"
-      ? "guide" : scene.modal,
+      ? "guide" : new URLSearchParams(location.search).get("match") === "1" ? "match" : scene.modal,
   );
+  const [matchReturn, setMatchReturn] = useState(null);
+  const openMatcher = (from = null) => { setMatchReturn(from); setModal("match"); };
   const [source, setSource] = useState("invoice");
   const [menu, setMenu] = useState(false);
   const avatarRef = useRef(null);
@@ -1136,6 +1139,7 @@ export function App() {
                 {saved ? "Saved locally" : "Could not save locally"}
               </span>
             )}
+            <button className="match-trigger" type="button" aria-label="AI: Match order" onClick={() => openMatcher()} aria-haspopup="dialog"><span aria-hidden="true">AI</span><span>Match order</span></button>
             <IconButton label="Open review guide" data-tour="guide" className="review-guide-trigger" onClick={() => setModal("guide")}><QuestionIcon size={20} /><span className="review-guide-label">Guide</span></IconButton>
             <ThemeToggle />
             <button
@@ -1349,6 +1353,7 @@ export function App() {
           </main>
         )}
       </div>
+      {modal === "match" && <OrderMatcher state={state} onClose={() => setModal(matchReturn === "review" ? "review" : null)} onInspect={id => { dispatch({ type: "CANDIDATE", id }); setModal("review"); }} />}
       {modal === "source" && (
         <Sources
           key={source}
@@ -1384,6 +1389,7 @@ export function App() {
           />
         ) : (
           <Review
+            onMatch={() => openMatcher("review")}
             state={state}
             dispatch={dispatch}
             saveStatus={persistenceEnabled ? saved : null}

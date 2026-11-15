@@ -7,7 +7,7 @@ const validTheme = (value) => (value === "light" ? "light" : "dark");
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() =>
-    validTheme(document.documentElement.dataset.theme),
+    validTheme((new URLSearchParams(location.search).has("capture") || new URLSearchParams(location.search).has("showcase")) ? new URLSearchParams(location.search).get("theme") || document.documentElement.dataset.theme : document.documentElement.dataset.theme),
   );
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

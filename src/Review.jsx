@@ -20,7 +20,7 @@ import {
 } from "./model.js";
 import { Modal, DialogCloseButton, Checks, Money, DataText } from "./components.jsx";
 import { AssociationEvidence } from "./AssociationEvidence.jsx";
-export function Review({ state, dispatch, onClose, saveStatus = null }) {
+export function Review({ state, dispatch, onClose, onMatch, saveStatus = null }) {
   const [view, setView] = useState(
     state.phase === "tested" ? "result" : "edit",
   );
@@ -247,6 +247,7 @@ export function Review({ state, dispatch, onClose, saveStatus = null }) {
       ) : (
         <>
           <p className="review-instruction">The invoice has no order reference. Compare supplier, currency and line items before proposing an association.</p>
+          <div className="match-review-entry"><div><strong>Looking beyond the order number?</strong><span>Compare item descriptions by meaning, with the source checks beside them.</span></div><button type="button" className="secondary-button" onClick={onMatch}><span className="match-small-label">AI</span>Match items</button></div>
           <div className="review-columns">
             <section className="order-picker">
               <label className="input-label" htmlFor="order-search">
