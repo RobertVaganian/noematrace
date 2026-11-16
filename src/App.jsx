@@ -33,7 +33,7 @@ import { InterfaceTour } from "./InterfaceTour.jsx";
 import { TraceSplit } from "./TraceSplit.jsx";
 import { InspectorSplit } from "./InspectorSplit.jsx";
 import { readTour, saveTour, initialTourStep, tourPreferencesEnabled, readNavigation, saveNavigation } from "./onboarding.js";
-import { useState, useEffect, useMemo, useReducer, useRef, useCallback, memo } from "react";
+import { useState, useEffect, useMemo, useReducer, useRef, useCallback, useLayoutEffect, memo } from "react";
 import {
   ReactFlow,
   Background,
@@ -268,7 +268,7 @@ const initialGraphViewport = { x: 8, y: 10, zoom: 1 };
 const flowOptions = { hideAttribution: true };
 function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, onCancelFocus, explored, onExplore }) {
   const { theme } = useTheme();
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 560px)").matches);
   const [ready, setReady] = useState(false);
   const [size, setSize] = useState(null);
   const root = useRef(null);
@@ -337,9 +337,10 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
     if (!fitted) return;
     flow.current?.setViewport(fitted, { duration: uiDuration(220), ease: t => 1 - Math.pow(1 - t, 3), interpolate: "linear" });
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
+      if (width <= 0 || height <= 0) return;
       const small = width < 560;
       setCompact(small);
       setSize(old => old?.width === width && old?.height === height ? old : { width, height });
@@ -384,7 +385,7 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
   return (
     <div
       ref={root}
-      className="trace-viewport"
+      className={`trace-viewport ${ready && size ? "is-ready" : ""}`}
       style={{ "--graph-edge": palette.line, "--graph-focus": palette.focus }}
     >
       <ReactFlow
@@ -1324,7 +1325,7 @@ export function App() {
                   </button>
                 </div>
               </header>
-              <div key={tab} id="run-panel" className="run-tab-panel" role="tabpanel" aria-labelledby={`run-tab-${tab}`} tabIndex={0}>
+              <div id="run-panel" className="run-tab-panel" role="tabpanel" aria-labelledby={`run-tab-${tab}`} tabIndex={0}>
               {tab === "trace" ? (
                 <TraceSplit eventCount={events.length} onResizeStart={cancelGraphFocus} graph={
                   <Graph key={tourLayout} selected={selected} previewed={previewed} onSelect={selectGraphNode} focusRequest={graphFocus} onFocusApplied={focusedEventStep} onCancelFocus={cancelGraphFocus} explored={canvasExplored} onExplore={() => setCanvasExplored(true)} />

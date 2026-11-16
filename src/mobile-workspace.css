@@ -1,6 +1,8 @@
 /* Phone actions share one row and one touch target, including AI and identity. */
 @media (max-width: 560px) {
   .app-shell .topbar {
+    position: relative;
+    z-index: 30;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 4px;
@@ -45,4 +47,36 @@
 @media (pointer: coarse) {
   .trace-viewport .evidence-conflict .react-flow__edge-path { animation: none; }
   .trace-viewport .workflow-node { transition: none; }
+}
+
+/* Anchor the compact profile to its trigger, not to the viewport height. */
+@media (max-width: 560px) {
+  .topbar .user-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: min(280px, 100%);
+    max-height: calc(100dvh - 128px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .topbar .user-menu select { min-height: 44px; font-size: 16px; }
+  .app-shell { --motion-layout: 0ms; }
+  .app-shell :is(.run-tab-panel, .list-view, .theme-toggle-icon) { animation: none; }
+  .app-shell :is(.topbar, .run-heading, .graph-canvas, .execution-log) { transition: none; }
+}
+/* The graph starts only with its measured layout; no desktop-node flash on phones. */
+.trace-viewport:not(.is-ready) .react-flow__viewport { visibility: hidden; }
+@media (hover: none) {
+  .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar) {
+    transition: none;
+  }
+  .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar):hover {
+    background: transparent;
+    color: var(--muted);
+  }
+  .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar):active {
+    background: var(--selection-soft);
+    color: var(--text);
+  }
 }
