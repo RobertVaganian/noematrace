@@ -579,7 +579,7 @@ export function CaseStudy() {
             <a className="case-open-button" href={appUrl('?match=1&showcase=trace')}>Try on-device matching<ArrowUpRightIcon size={15} /></a>
             <p className="case-tour-note">First use downloads about 50 MB including runtime files. An immediate source-check preview is available without downloading a model; it is labelled as a deterministic preview. Matching can be wrong, cannot interpret an invoice beyond the available records, and never executes a payment.</p>
           </Chapter>
-          <Chapter number="↗" id="notifications" title="Bring the reviewer back to the right version.">
+          <Chapter number="04" id="notifications" title="Bring the reviewer back to the right version.">
             <p>A submitted proposal needs a Finance review. A returned version needs the operator’s attention. The header bell keeps that handoff visible, with an unread count for the current demo role.</p>
             <figure className="case-match-image"><img src={appUrl(`/case/${theme}/notifications.jpg?v=35`)} width="1360" height="1680" loading="lazy" alt="Operations notifications with a source change, version-specific Finance decisions and saved test results, each with a direct evidence link." /></figure>
             <div className="case-match-points"><article><h3>The event keeps its destination.</h3><p>Test results open their saved snapshot. Requests and decisions open the proposal version that produced the event, even after another revision.</p></article><article><h3>Reading is a separate action.</h3><p>Mark an event read, filter unread items or clear the current count. None of those actions acknowledge evidence or change approval eligibility.</p></article><article><h3>Useful across both demo roles.</h3><p>Operations sees test results and Finance decisions. Finance sees submitted requests. Both see source changes that can invalidate the evidence.</p></article></div>
@@ -587,7 +587,7 @@ export function CaseStudy() {
             <p className="case-tour-note">Read state stays separate for each role in this browser. These are in-app review events, with no email or push delivery. The example is isolated from your saved review.</p>
           </Chapter>
           <Chapter
-            number="04"
+            number="05"
             id="interface"
             title="A quiet interface for a consequential review."
           >
@@ -620,7 +620,7 @@ export function CaseStudy() {
             <Refinements />
           </Chapter>
           <Chapter
-            number="05"
+            number="06"
             id="verification"
             title="What the current prototype establishes."
           >
