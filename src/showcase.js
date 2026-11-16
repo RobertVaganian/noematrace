@@ -25,11 +25,12 @@ function decide(state, decision, note) {
 // They contain synthetic records and never call an external service.
 export function showcaseScene(name) {
   let state = act(initialState, "RESET");
-  if (!["comparison", "finance", "history", "stale"].includes(name))
+  if (!["review", "comparison", "finance", "history", "stale", "notifications"].includes(name))
     return { state, tab: "trace", modal: null };
   state = act(act(state, "CANDIDATE", { id: "PO-732" }), "REASON", {
     value: explanation,
   });
+  if (name === "review") return { state, tab: "trace", modal: "review" };
   if (name === "comparison")
     return { state: test(state), tab: "trace", modal: "review" };
   state = submit(state);
@@ -56,6 +57,7 @@ export function showcaseScene(name) {
     "approve",
     "Reviewed supplier, currency and all three line items. Approve the association correction only.",
   );
+  if (name === "notifications") return { state: act(act(state, "SET_ROLE", { role: "operator" }), "DEMO_UPDATE_ORDER"), tab: "proposals", modal: "notifications" };
   if (name === "stale")
     return {
       state: act(state, "DEMO_UPDATE_ORDER"),

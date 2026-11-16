@@ -31,7 +31,7 @@ function Refinement({ item, onEnlarge }) {
   const { theme } = useTheme();
   const [version, setVersion] = useState("current");
   const label = version === "current" ? "Current prototype" : "Earlier iteration";
-  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=34`);
+  const src = appUrl(`/case/${theme}/${item.id}-${version}-context.webp?v=35`);
   return <article>
     <h3>{item.title}</h3><p>{item.text}</p>
     <div className="case-evidence-toolbar">
@@ -43,7 +43,7 @@ function Refinement({ item, onEnlarge }) {
     </div>
     <figure className="case-context-image">
       <button type="button" onClick={() => onEnlarge({ src, alt: item[version], title: `${item.title} ${label}` })} aria-label={`Enlarge ${label.toLowerCase()}: ${item.title}`}>
-        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=34`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
+        <span className="case-refinement-frames">{["earlier", "current"].map(id => <img key={id} className={version === id ? "is-active" : ""} src={appUrl(`/case/${theme}/${item.id}-${id}-context.webp?v=35`)} alt={version === id ? item[id] : ""} aria-hidden={version !== id} width={item.id === "canvas" ? 791 : 1012} height={item.id === "canvas" ? 718 : 872} loading="eager" />)}</span>
       </button>
       <figcaption>{version === "current" ? item.current : item.earlier}</figcaption>
     </figure>
@@ -77,7 +77,7 @@ function OverviewFilm({ onExpand }) {
   const [active, setActive] = useState(0), [visit, setVisit] = useState(0);
   const [playing, setPlaying] = useState(false), [elapsed, setElapsed] = useState(0), [error, setError] = useState(false);
   const [ready, setReady] = useState(false);
-  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=34`);
+  const poster = appUrl(`/case/${theme}/chapter-${active + 1}.jpg?v=35`);
   const previous = useRef({ poster, theme, active, visit });
   const [outgoing, setOutgoing] = useState(poster);
   const clock = value => `0:${String(Math.floor(value)).padStart(2, "0")}`;
@@ -132,7 +132,7 @@ function OverviewFilm({ onExpand }) {
         onEnded={event => { if (!currentMedia(event)) return; setElapsed(7); progress.current?.style.setProperty("--chapter-progress", 1); if (intent.current && active < 4) choose(active + 1); else { intent.current = false; setPlaying(false); } }}
         onError={event => { if (currentMedia(event)) { setReady(true); setError(true); intent.current = false; setPlaying(false); } }}
         aria-label={`Chapter ${active + 1}: ${overviewChapters[active].name}. Seven-second silent screen walkthrough.`} aria-describedby="case-film-description">
-        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=34`)} type="video/mp4" />
+        <source src={appUrl(`/case/${theme}/chapter-${active + 1}.mp4?v=35`)} type="video/mp4" />
         Read the complete walkthrough below.
       </video>
     </div>
@@ -165,7 +165,7 @@ function Overview() {
       <p>Playback is an edited sequence of actual screens, not a live review session. It does not change your review.</p>
     </details>
     {expanded !== null && <Modal title={overviewChapters[Math.min(4, Math.floor(expanded / 7))].name} eyebrow="Actual prototype screen" className="case-image-modal case-frame-modal" onClose={() => setExpanded(null)}>
-      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=34`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
+      <img src={appUrl(`/case/${theme}/state-${Math.min(4, Math.floor(expanded / 7)) + 1}.jpg?v=35`)} alt={overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail} />
       <p>{overviewChapters[Math.min(4, Math.floor(expanded / 7))].detail}</p>
     </Modal>}
   </section>;
@@ -574,10 +574,17 @@ export function CaseStudy() {
           <Chapter number="AI" id="on-device-ai" title="Find the order behind different wording.">
             <p>An invoice says “industrial sensor”. A reviewer searches for “temperature probes”. Local AI connects those descriptions and shows the closest original order line beside each phrase.</p>
             <p>The shortlist keeps meaning and evidence separate. Supplier identity, currency, total and ordered line items are checked directly against the records. An order with the right total and the wrong supplier remains visibly inconsistent.</p>
-            <figure className="case-match-image"><img src={appUrl(`/case/${theme}/order-match.jpg?v=34`)} width="2160" height="1962" loading="lazy" alt="Local model matching temperature probes to industrial sensors, installation brackets to mounting kits and delivery to freight, with all four source checks visible." /></figure>
+            <figure className="case-match-image"><img src={appUrl(`/case/${theme}/order-match.jpg?v=35`)} width="2160" height="1962" loading="lazy" alt="Local model matching temperature probes to industrial sensors, installation brackets to mounting kits and delivery to freight, with all four source checks visible." /></figure>
             <div className="case-match-points"><article><h3>Useful at the missing reference.</h3><p>Match order is available in the header and beside the manual order search. One action opens the matching workspace.</p></article><article><h3>Inspect before using.</h3><p>A suggestion selects an order only when you choose Inspect in review. Your explanation, read-only test and Finance decision remain separate.</p></article><article><h3>Runs on this device.</h3><p>An optional 23 MB model compares meanings in a worker. No API key or paid inference account. No matching records are sent to an inference server.</p></article></div>
             <a className="case-open-button" href={appUrl('?match=1&showcase=trace')}>Try on-device matching<ArrowUpRightIcon size={15} /></a>
             <p className="case-tour-note">First use downloads about 50 MB including runtime files. An immediate source-check preview is available without downloading a model; it is labelled as a deterministic preview. Matching can be wrong, cannot interpret an invoice beyond the available records, and never executes a payment.</p>
+          </Chapter>
+          <Chapter number="↗" id="notifications" title="Bring the reviewer back to the right version.">
+            <p>A submitted proposal needs a Finance review. A returned version needs the operator’s attention. The header bell keeps that handoff visible, with an unread count for the current demo role.</p>
+            <figure className="case-match-image"><img src={appUrl(`/case/${theme}/notifications.jpg?v=35`)} width="1360" height="1680" loading="lazy" alt="Operations notifications with a source change, version-specific Finance decisions and saved test results, each with a direct evidence link." /></figure>
+            <div className="case-match-points"><article><h3>The event keeps its destination.</h3><p>Test results open their saved snapshot. Requests and decisions open the proposal version that produced the event, even after another revision.</p></article><article><h3>Reading is a separate action.</h3><p>Mark an event read, filter unread items or clear the current count. None of those actions acknowledge evidence or change approval eligibility.</p></article><article><h3>Useful across both demo roles.</h3><p>Operations sees test results and Finance decisions. Finance sees submitted requests. Both see source changes that can invalidate the evidence.</p></article></div>
+            <a className="case-open-button" href={appUrl('?showcase=notifications')}>Explore review notifications<ArrowUpRightIcon size={15} /></a>
+            <p className="case-tour-note">Read state stays separate for each role in this browser. These are in-app review events, with no email or push delivery. The example is isolated from your saved review.</p>
           </Chapter>
           <Chapter
             number="04"
@@ -621,10 +628,10 @@ export function CaseStudy() {
               <li>
                 <CheckIcon size={17} />
                 <span>
-                  <strong>108 automated behavior checks</strong> cover evidence
+                  <strong>117 automated behavior checks</strong> cover evidence
                   matching, roles, revisions, stale results, version-specific
                   decisions, export, local recovery, field differences and
-                  local matching cancellation, invalid model output, unrelated queries and source freshness, state-aware review guidance, seven-step tour recovery, placement, isolated navigation preferences, cancellation of interrupted UI motion, event-to-step navigation, panel-size limits, keyboard resizing, isolated layout preferences and migration of saved tour progress.
+                  notification destinations and read-state isolation, local matching cancellation, invalid model output, unrelated queries and source freshness, state-aware review guidance, seven-step tour recovery, placement, isolated navigation preferences, cancellation of interrupted UI motion, event-to-step navigation, panel-size limits, keyboard resizing, isolated layout preferences and migration of saved tour progress.
                 </span>
               </li>
               <li><CheckIcon size={17} /><span><strong>13 animation and media checks</strong> verify centred Fit, visible workflow bounds, the click target, all seven tour loops in both themes, bounded divider demonstrations, clipped event text during resize, click timing, independent seven-second overview chapters and loaded workspace captures.</span></li>

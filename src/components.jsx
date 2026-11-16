@@ -59,6 +59,7 @@ export function DialogCloseButton({ children, ...props }) {
 export function Modal({ title, eyebrow, onClose, children, footer, context, onKeyDown, className = "" }) {
   const illustrative = new URLSearchParams(location.search).has("embedded");
   const ref = useRef(null);
+  const returnFocus = useRef(document.activeElement);
   const dismiss = useAnimatedDismiss(ref);
   const [scrollbar, setScrollbar] = useState(0);
   const hasFooter = Boolean(footer);
@@ -69,7 +70,7 @@ export function Modal({ title, eyebrow, onClose, children, footer, context, onKe
   }, [title]);
   useEffect(() => {
     const d = ref.current;
-    const previousFocus = document.activeElement;
+    const previousFocus = returnFocus.current;
     d.showModal();
     if (!illustrative) d.querySelector("h2")?.focus();
     return () => {

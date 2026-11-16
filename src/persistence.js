@@ -1,3 +1,4 @@
+import { normaliseNotificationReads } from "./notifications.js";
 import { RUN_ID } from "./run-reference.js";
 import { initialState, orders, people } from "./model.js";
 
@@ -112,7 +113,7 @@ export function encodeReview(state, savedAt = new Date().toISOString()) {
     schemaVersion: 1,
     runId: RUN_ID,
     savedAt,
-    state: { ...state, error: "" },
+    state: { ...state, ...(state.notificationReads !== undefined ? { notificationReads: normaliseNotificationReads(state) } : {}), error: "" },
   });
 }
 
@@ -142,6 +143,7 @@ export function decodeReview(raw) {
         decision: proposal.decision && { ...proposal.decision, actor: actor(proposal.decision.actor) },
       })),
     };
+    if (state.notificationReads !== undefined) state.notificationReads = normaliseNotificationReads(state);
     const interrupted = state.phase === "testing";
     if (interrupted) {
       state.phase = "idle";

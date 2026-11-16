@@ -21,6 +21,9 @@ import {
 } from "./ProposalReview.jsx";
 import { IconButton, Modal, DialogCloseButton, DocumentRecord, Money, DataText, moveTabFocus } from "./components.jsx";
 import { Review } from "./Review.jsx";
+import { Notifications, NotificationTest } from "./Notifications.jsx";
+import { notificationReducer, notificationsFor, notificationTarget } from "./notifications.js";
+import "./notifications.css";
 import { OrderMatcher } from "./OrderMatcher.jsx";
 import { ReviewGuide } from "./ReviewGuide.jsx";
 import { MotionPresence, TabIndicator, uiDuration, useAnimatedDismiss, useCompactNavigation } from "./Motion.jsx";
@@ -42,6 +45,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import {
   FileIcon,
+  BellIcon,
   PulseIcon,
   ClipboardTextIcon,
   InfoIcon,
@@ -74,7 +78,6 @@ import {
   invoice,
   orders,
   baseEvents,
-  reducer,
   people,
   latestProposal,
   proposalLabels,
@@ -847,11 +850,11 @@ export function App() {
       return { status: "unavailable", state: null };
     }
   });
-  const [state, dispatch] = useReducer(reducer, recovery.state || scene.state);
+  const [state, dispatch] = useReducer(notificationReducer, recovery.state || scene.state);
   const [tourStep, setTourStep] = useState(() => {
     let preference = null;
     try { preference = readTour(localStorage); } catch { /* Storage may be blocked. */ }
-    return new URLSearchParams(location.search).get("match") === "1" ? null : initialTourStep(location.search, preference, recovery.state || scene.state);
+    return (new URLSearchParams(location.search).get("match") === "1" || new URLSearchParams(location.search).get("notifications") === "1") ? null : initialTourStep(location.search, preference, recovery.state || scene.state);
   });
   const [tourLayout, setTourLayout] = useState(0);
   const compactNavigation = useCompactNavigation();
@@ -870,9 +873,11 @@ export function App() {
   const [graphFocus, setGraphFocus] = useState(null);
   const focusSequence = useRef(0);
   const [modal, setModal] = useState(
-    persistenceEnabled && new URLSearchParams(location.search).get("guide") === "1"
+    new URLSearchParams(location.search).get("notifications") === "1" ? "notifications" : persistenceEnabled && new URLSearchParams(location.search).get("guide") === "1"
       ? "guide" : new URLSearchParams(location.search).get("match") === "1" ? "match" : scene.modal,
   );
+  const [notificationTestId, setNotificationTestId] = useState(null);
+  const unreadNotifications = notificationsFor(state).filter(item => !item.read).length;
   const [matchReturn, setMatchReturn] = useState(null);
   const openMatcher = (from = null) => { setMatchReturn(from); setModal("match"); };
   const [source, setSource] = useState("invoice");
@@ -1013,6 +1018,15 @@ export function App() {
     setSource(s);
     setModal("source");
   };
+  const openNotification = id => {
+    const target = notificationTarget(state, id);
+    if (!target) { setToast("That event is no longer in this review."); return; }
+    dispatch({ type: "NOTIFICATION_READ", id, read: true });
+    setMenu(false);
+    if (target.type === "proposal") { setNav("runs"); setTab("proposals"); openProposal(target.proposalId); }
+    else if (target.type === "test") { setNotificationTestId(target.testId); setModal("notification-test"); }
+    else { setModal(null); showEventStep(target.nodeId); }
+  };
   const copyId = async () => {
     try {
       await navigator.clipboard.writeText(RUN_ID);
@@ -1140,6 +1154,7 @@ export function App() {
               </span>
             )}
             <button className="match-trigger" type="button" aria-label="AI: Match order" onClick={() => openMatcher()} aria-haspopup="dialog"><span aria-hidden="true">AI</span><span>Match order</span></button>
+            <IconButton label={`Notifications, ${unreadNotifications} unread`} className="notification-trigger" aria-haspopup="dialog" aria-expanded={modal === "notifications"} onClick={() => { setMenu(false); setModal("notifications"); }}><BellIcon size={20} />{unreadNotifications > 0 && <span className="notification-count" aria-hidden="true">{unreadNotifications > 99 ? "99+" : unreadNotifications}</span>}</IconButton>
             <IconButton label="Open review guide" data-tour="guide" className="review-guide-trigger" onClick={() => setModal("guide")}><QuestionIcon size={20} /><span className="review-guide-label">Guide</span></IconButton>
             <ThemeToggle />
             <button
@@ -1290,11 +1305,12 @@ export function App() {
                   <TabIndicator value={tab} />
                   <button
                     className="mobile-details-button"
+                    aria-label="Open step details"
                     data-tour="details"
                     onClick={() => setDetails(true)}
                   >
                     <SlidersHorizontalIcon size={16} />
-                    Details
+                    <span>Details</span>
                   </button>
                 </div>
               </header>
@@ -1353,6 +1369,8 @@ export function App() {
           </main>
         )}
       </div>
+      {modal === "notifications" && <Notifications state={state} dispatch={dispatch} onOpen={openNotification} onClose={() => setModal(null)} />}
+      {modal === "notification-test" && state.tests.some(test => test.id === notificationTestId) && <NotificationTest state={state} test={state.tests.find(test => test.id === notificationTestId)} onClose={() => setModal("notifications")} />}
       {modal === "match" && <OrderMatcher state={state} onClose={() => setModal(matchReturn === "review" ? "review" : null)} onInspect={id => { dispatch({ type: "CANDIDATE", id }); setModal("review"); }} />}
       {modal === "source" && (
         <Sources
