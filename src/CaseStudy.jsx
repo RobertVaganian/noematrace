@@ -617,6 +617,7 @@ export function CaseStudy() {
                 </p>
               </article>
             </div>
+            <p className="case-tour-note"><strong>Room to review on a phone.</strong> Navigation starts collapsed, five header actions share 44 px touch targets, and the event log stays in the page’s scrolling flow. Drag empty space or pinch to inspect the workflow; Fit restores all six steps. Panning stays inside the canvas engine, while zoom-dependent arrow and grid sizes update at most once per animation frame.</p>
             <Refinements />
           </Chapter>
           <Chapter
@@ -628,7 +629,7 @@ export function CaseStudy() {
               <li>
                 <CheckIcon size={17} />
                 <span>
-                  <strong>117 automated behavior checks</strong> cover evidence
+                  <strong>125 automated behavior checks</strong> cover viewport update coalescing, phone navigation defaults, evidence
                   matching, roles, revisions, stale results, version-specific
                   decisions, export, local recovery, field differences and
                   notification destinations and read-state isolation, local matching cancellation, invalid model output, unrelated queries and source freshness, state-aware review guidance, seven-step tour recovery, placement, isolated navigation preferences, cancellation of interrupted UI motion, event-to-step navigation, panel-size limits, keyboard resizing, isolated layout preferences and migration of saved tour progress.

@@ -121,6 +121,8 @@ Read one event or mark the current list read. Read state stays separate for each
 
 The workspace also includes a seven-step tour, resizable panels, local review recovery, light and dark themes, role-specific notifications, and CSV/JSON event export.
 
+On phones, the navigation starts collapsed to leave room for the workflow. Header actions have equal 44 px touch targets; drag and pinch navigate the graph, and Fit restores all six steps. The event log follows the canvas in the page, without a second scrolling panel.
+
 ## Run locally
 
 Requires **Node.js 22.12+** and npm.

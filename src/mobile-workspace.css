@@ -1,0 +1,48 @@
+/* Phone actions share one row and one touch target, including AI and identity. */
+@media (max-width: 560px) {
+  .app-shell .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    padding: 8px 12px;
+    min-height: 108px;
+    height: auto;
+  }
+  .topbar .topbar-context { width: 100%; gap: 8px; }
+  .topbar .breadcrumb { flex: 1; min-width: 0; gap: 4px; flex-flow: row wrap; align-items: center; }
+  .topbar .breadcrumb > .mono { font-size: 11px; line-height: 1.5; }
+  .topbar .run-status { flex: none; font-size: 10px; line-height: 1.5; white-space: normal; }
+  .topbar > .user-area {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; gap: 4px; margin: 0;
+  }
+  .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar) {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 44px; width: 44px; min-width: 44px; height: 44px; min-height: 44px;
+    padding: 0; margin: 0; border: 1px solid transparent; border-radius: 8px;
+    background: transparent; color: var(--muted);
+  }
+  .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar):hover {
+    background: var(--selection-soft); color: var(--text);
+  }
+  .topbar .match-trigger > span:first-child {
+    display: grid; place-items: center; box-sizing: border-box;
+    width: 22px; height: 22px; padding: 0; font-size: 10px; line-height: 1;
+  }
+  .topbar .notification-count { top: 0; right: 0; }
+  .topbar .save-indicator { display: none; }
+  .topbar .navigation-toggle { width: 44px; height: 44px; flex: 0 0 44px; }
+  .trace-split > .graph-canvas { flex: 0 0 520px; min-height: 520px; }
+  .trace-split > .execution-log { height: auto; max-height: none; overflow: visible; }
+  .canvas-guide .pan-hint-pointer { display: none; }
+  .canvas-guide .pan-hint-touch { display: inline; }
+  .graph-tools .icon-button { width: 44px; height: 44px; }
+  .graph-tools .graph-fit-button { height: 44px; min-width: 76px; }
+  .graph-tools { left: 12px; bottom: 12px; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface); }
+  .trace-viewport .react-flow__pane { touch-action: none; }
+  .trace-viewport .react-flow__node { touch-action: none; }
+}
+@media (pointer: coarse) {
+  .trace-viewport .evidence-conflict .react-flow__edge-path { animation: none; }
+  .trace-viewport .workflow-node { transition: none; }
+}

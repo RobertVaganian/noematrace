@@ -96,12 +96,12 @@ export function tourPlacement(target, viewport, card) {
 }
 
 export const navigationStorageKey = "noematrace.navigation.v1";
-export function readNavigation(storage, search) {
-  if (!tourPreferencesEnabled(search)) return false;
+export function readNavigation(storage, search, fallback = false) {
+  if (!tourPreferencesEnabled(search)) return fallback;
   try {
     const preference = JSON.parse(storage.getItem(navigationStorageKey));
-    return preference?.version === 1 && preference.collapsed === true;
-  } catch { return false; }
+    return preference?.version === 1 && typeof preference.collapsed === "boolean" ? preference.collapsed : fallback;
+  } catch { return fallback; }
 }
 export function saveNavigation(storage, search, collapsed) {
   if (!tourPreferencesEnabled(search)) return false;

@@ -1,3 +1,4 @@
+import { createZoomObserver } from "./graph-viewport.js";
 import { RUN_ID } from "./run-reference.js";
 import { appUrl } from "./paths.js";
 import { AuditExplorer } from "./AuditExplorer.jsx";
@@ -24,6 +25,7 @@ import { Review } from "./Review.jsx";
 import { Notifications, NotificationTest } from "./Notifications.jsx";
 import { notificationReducer, notificationsFor, notificationTarget } from "./notifications.js";
 import "./notifications.css";
+import "./mobile-workspace.css";
 import { OrderMatcher } from "./OrderMatcher.jsx";
 import { ReviewGuide } from "./ReviewGuide.jsx";
 import { MotionPresence, TabIndicator, uiDuration, useAnimatedDismiss, useCompactNavigation } from "./Motion.jsx";
@@ -31,7 +33,7 @@ import { InterfaceTour } from "./InterfaceTour.jsx";
 import { TraceSplit } from "./TraceSplit.jsx";
 import { InspectorSplit } from "./InspectorSplit.jsx";
 import { readTour, saveTour, initialTourStep, tourPreferencesEnabled, readNavigation, saveNavigation } from "./onboarding.js";
-import { useState, useEffect, useMemo, useReducer, useRef } from "react";
+import { useState, useEffect, useMemo, useReducer, useRef, useCallback, memo } from "react";
 import {
   ReactFlow,
   Background,
@@ -166,7 +168,7 @@ const specs = [
     },
   },
 ];
-function WorkflowNode({ id, data, selected }) {
+const WorkflowNode = memo(function WorkflowNode({ id, data, selected }) {
   const I = nodeIcons[id];
   const updateNodeInternals = useUpdateNodeInternals();
   useEffect(() => {
@@ -214,7 +216,7 @@ function WorkflowNode({ id, data, selected }) {
       {data.tag && <span className="node-tag">{data.tag}</span>}
     </div>
   );
-}
+});
 const nodeTypes = {
   workflow: WorkflowNode,
 };
@@ -262,6 +264,8 @@ const compactPositions = {
   prepare: { x: 224, y: 264 },
   submit: { x: 224, y: 388 },
 };
+const initialGraphViewport = { x: 8, y: 10, zoom: 1 };
+const flowOptions = { hideAttribution: true };
 function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, onCancelFocus, explored, onExplore }) {
   const { theme } = useTheme();
   const [compact, setCompact] = useState(false);
@@ -270,14 +274,18 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
   const root = useRef(null);
   const initialViewport = useRef(null);
   const flow = useRef(null);
-  const [viewport, setViewport] = useState({
-    x: 8,
-    y: 10,
-    zoom: 1,
-  });
+  const [zoom, setZoom] = useState(1);
+  const zoomObserver = useMemo(() => createZoomObserver(setZoom), []);
+  useEffect(() => () => zoomObserver.cancel(), [zoomObserver]);
+  const observeViewport = useCallback((viewport) => zoomObserver.observe(viewport), [zoomObserver]);
+  const selectNode = useCallback((_, node) => onSelect(node.id), [onSelect]);
+  const selectChangedNode = useCallback((changes) => {
+    const change = changes.find(c => c.type === "select" && c.selected);
+    if (change) onSelect(change.id);
+  }, [onSelect]);
   const context = useMemo(() => connectionContext(selected), [selected]);
   const palette = connectionPalette[theme];
-  const markerSize = Math.round((32 / viewport.zoom) * 10) / 10;
+  const markerSize = Math.round((32 / zoom) * 10) / 10;
   const edges = useMemo(
     () =>
       workflowConnections.map((connection) => {
@@ -302,7 +310,7 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
           style: { stroke: color, strokeWidth: focused ? 2.4 : 1.9 },
         };
       }),
-    [context, palette, markerSize, selected],
+    [context, palette, markerSize],
   );
   const nodes = useMemo(
     () =>
@@ -344,13 +352,13 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
         };
         initialViewport.current = next;
         flow.current?.setViewport(next, { duration: 0 });
-        setViewport(next);
+        observeViewport(next);
         return;
       }
       const next = desktopViewport(width, height);
       initialViewport.current = next;
       flow.current?.setViewport(next, { duration: 0 });
-      setViewport(next);
+      observeViewport(next);
     });
     observer.observe(root.current);
     return () => observer.disconnect();
@@ -383,20 +391,21 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        defaultViewport={viewport}
-        onViewportChange={setViewport}
+        defaultViewport={initialGraphViewport}
+        onViewportChange={observeViewport}
         onMoveStart={(event) => { if (event?.isTrusted && root.current?.contains(event.target)) onExplore(); }}
-        proOptions={{ hideAttribution: true }}
+        proOptions={flowOptions}
         onInit={(instance) => {
           flow.current = instance;
           if (initialViewport.current) instance.setViewport(initialViewport.current, { duration: 0 });
           setReady(true);
         }}
-        onNodeClick={(_, n) => onSelect(n.id)}
-        onNodesChange={(changes) => {
-          const change = changes.find((c) => c.type === "select" && c.selected);
-          if (change) onSelect(change.id);
-        }}
+        onNodeClick={selectNode}
+        onNodesChange={selectChangedNode}
+        panOnDrag
+        zoomOnPinch
+        zoomOnDoubleClick={false}
+        preventScrolling={!compact}
         nodesDraggable={false}
         nodesConnectable={false}
         minZoom={0.35}
@@ -406,7 +415,7 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
         <Background
           variant={BackgroundVariant.Dots}
           gap={20}
-          size={1.5 / viewport.zoom}
+          size={1.5 / zoom}
           color="var(--graph-dot)"
         />
         <GraphTools onReset={resetView} onExplore={onExplore} />
@@ -414,7 +423,7 @@ function Graph({ selected, previewed, onSelect, focusRequest, onFocusApplied, on
       <div className={`canvas-guide ${explored ? "is-dismissed" : ""}`} role="group" aria-label="Graph navigation" aria-hidden={explored}>
         <HandIcon size={16} aria-hidden="true" />
         <span className="pan-hint-pointer">Click and hold empty space, then drag.</span>
-        <span className="pan-hint-touch">Touch and hold empty space, then drag.</span>
+        <span className="pan-hint-touch">Drag empty space · Pinch to zoom.</span>
       </div>
       <span
         className="canvas-instruction"
@@ -859,7 +868,8 @@ export function App() {
   const [tourLayout, setTourLayout] = useState(0);
   const compactNavigation = useCompactNavigation();
   const [navigationCollapsed, setNavigationCollapsed] = useState(() => {
-    try { return readNavigation(localStorage, location.search); } catch { return false; }
+    const phone = window.matchMedia("(max-width: 560px)").matches;
+    try { return readNavigation(localStorage, location.search, phone); } catch { return phone; }
   });
   useEffect(() => {
     try { saveNavigation(localStorage, location.search, navigationCollapsed); } catch { /* Session choice remains available. */ }
