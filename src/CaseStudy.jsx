@@ -204,7 +204,18 @@ const views = [
 
 function ProductView({ scene = "trace", description, compact = false }) {
   const root = useRef(null);
+  const { theme } = useTheme();
   const [width, setWidth] = useState(1100);
+  const [compactPreview, setCompactPreview] = useState(() => matchMedia("(max-width: 1199px)").matches);
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    const query = matchMedia("(max-width: 1199px)");
+    const update = () => setCompactPreview(query.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  const sceneNumber = ["trace", "comparison", "finance", "history", "stale"].indexOf(scene) + 1;
+  const still = appUrl(`/case/${theme}/state-${sceneNumber}.jpg?v=35`);
   const sourceWidth = compact ? 1180 : 1487;
   const sourceHeight = compact ? 900 : 1058;
   useLayoutEffect(() => {
@@ -236,8 +247,13 @@ function ProductView({ scene = "trace", description, compact = false }) {
       <div
         ref={root}
         className="case-frame-stage"
-        style={{ aspectRatio: `${sourceWidth} / ${sourceHeight}` }}
+        style={{ aspectRatio: compactPreview ? "1363 / 900" : `${sourceWidth} / ${sourceHeight}` }}
       >
+        {compactPreview ? (
+          <button className="case-still-open" onClick={() => setExpanded(true)} aria-label="Enlarge prototype screen">
+            <img src={still} alt={description} width="1363" height="900" loading={compact ? "lazy" : "eager"} decoding="async" />
+          </button>
+        ) : <>
         <iframe
           key={scene}
           src={appUrl(`?showcase=${scene}&embedded=1`)}
@@ -264,11 +280,15 @@ function ProductView({ scene = "trace", description, compact = false }) {
             <ArrowUpRightIcon size={16} />
           </span>
         </a>
+        </>}
       </div>
       <figcaption>
         {description}
         <span>Synthetic demonstration data</span>
       </figcaption>
+      {expanded && <Modal title="Prototype screen" className="case-image-modal case-frame-modal" onClose={() => setExpanded(false)}>
+        <div className="case-still-detail" tabIndex={0}><img src={still} alt={description} width="1363" height="900" /></div>
+      </Modal>}
     </figure>
   );
 }
@@ -482,8 +502,7 @@ export function CaseStudy() {
             <span className="case-eyebrow">Inside the workflow</span>
             <h2 id="explorer-title" tabIndex={-1}>Follow a decision through its states.</h2>
             <p>
-              Choose a state to inspect. Each view is rendered by the working
-              prototype.
+              Choose a state to inspect. The previews show the working prototype.
             </p>
           </header>
           <div

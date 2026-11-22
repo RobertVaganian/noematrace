@@ -917,3 +917,27 @@ body:has(.case-study) { min-width: 0; }
 .case-chapter-content > .case-tour-note { padding: 17px 19px; border: 1px solid var(--case-border); border-radius: 10px; font-size: 13px; line-height: 1.75; color: var(--case-muted); }
 .case-tour-note strong { font-weight: 500; color: var(--text); }
 .case-tour-note a { display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: 3px; }
+
+.case-still-open { display: block; width: 100%; padding: 0; cursor: zoom-in; }
+.case-still-open img { display: block; width: 100%; height: auto; }
+.case-still-open:focus-visible { outline-offset: -3px; }
+.case-still-detail { overflow: auto; }
+.case-frame-modal .case-still-detail img { width: 100%; max-height: none; }
+
+@media (max-width: 1199px) {
+  .case-product-bar { height: auto; min-height: 48px; flex-wrap: wrap; gap: 0 12px; font-size: 12px; }
+  .case-product-bar > a { min-height: 44px; font-size: 12px; }
+  .case-film-chapters button { overflow-wrap: anywhere; }
+}
+@media (max-width: 650px) {
+  .case-header { gap: 8px 12px; flex-wrap: wrap; }
+  .case-header nav { gap: 8px; margin-inline-start: auto; }
+  .case-open-button, .case-header .theme-toggle { min-height: 44px; }
+  .case-hero h1 { font-size: clamp(30px, 8vw, 41px); }
+  .case-chapter-content > p, .case-state-explanation p { font-size: 16px; }
+  .case-state-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; }
+  .case-state-tabs > button { min-height: 48px; padding: 8px 0; text-align: start; white-space: normal; font-size: 12px; }
+  .case-state-explanation { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .case-product-view > figcaption { font-size: 12px; }
+  .case-frame-modal .case-still-detail img { width: 720px; max-width: none; }
+}
