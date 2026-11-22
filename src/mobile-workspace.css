@@ -1,23 +1,104 @@
-/* Phone actions share one row and one touch target, including AI and identity. */
+/* The tabs change the run view. The compact inspector is a separate action. */
+.phone-wordmark, .phone-run-reference, .phone-nav-scrim, .mobile-details-button { display: none; }
+.run-view-controls { display: flex; align-items: stretch; justify-content: space-between; gap: 8px; margin-top: auto; }
+.inspector-payment > .muted { font-size: 12px; }
+.inspector-payment > p { margin-top: 8px; font-size: 13px; }
+
+@media (max-width: 900px) {
+  .run-view-controls .mobile-details-button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    align-self: center; flex: none; min-height: 44px; padding-inline: 10px;
+    border-radius: 8px; background: var(--selection-soft); color: var(--text); font-size: 13px;
+  }
+  dialog.inspector.mobile-open[open] {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    width: min(400px, 100%); padding: 0; overflow: hidden;
+  }
+  .inspector.mobile-open .inspector-heading {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+  }
+  .inspector.mobile-open h2 { font-size: 20px; line-height: 1.25; letter-spacing: -.35px; }
+  .inspector.mobile-open .inspector-title { min-height: 0; }
+  .inspector.mobile-open .inspector-description { font-size: 13px; line-height: 1.4; }
+  .inspector.mobile-open .inspector-mobile-close { position: static; align-self: start; }
+  .inspector-mobile-close .icon-button {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--selection-soft);
+  }
+  .inspector.mobile-open .inspector-body {
+    min-height: 0; padding: 0 18px 16px; overflow: auto;
+    overscroll-behavior: contain; animation: none;
+  }
+  .inspector.mobile-open .inspector-body:focus-visible { outline-offset: -2px; }
+  .inspector.mobile-open .check-status { margin-top: 0; padding-block: 13px; }
+  .inspector.mobile-open .step-information { border-top: 0; margin-top: 0; padding-top: 16px; }
+  .inspector.mobile-open .amounts.financial-summary > .financial-difference { margin-inline: 0; }
+  .inspector.mobile-open .inspector-sources { margin-top: 16px; padding-top: 14px; }
+  .inspector.mobile-open .inspector-sources h3 { margin-bottom: 2px; font-size: 13px; font-weight: 550; }
+  .inspector.mobile-open .inspector-sources > button {
+    min-height: 48px; margin-top: 0; padding: 8px 4px; border: 0; background: transparent; font-size: 14px;
+  }
+  .inspector.mobile-open .inspector-sources > button:active { background: var(--selection-soft); }
+  .inspector.mobile-open .inspector-sources > button > svg { flex-shrink: 0; }
+  .inspector.mobile-open .inspector-action { margin: 0; padding: 10px 18px calc(10px + env(safe-area-inset-bottom)); }
+  .inspector.mobile-open .inspector-action .primary-button { width: 100%; min-height: 46px; margin-top: 8px; font-size: 14px; border-radius: 8px; }
+  .inspector.mobile-open .inspector-action kbd, .inspector.mobile-open .inspector-payment > .muted { display: none; }
+  .inspector.mobile-open .inspector-payment > p { margin: 0; color: var(--muted); font-size: 12px; }
+  .inspector.mobile-open .pending-note { padding-top: 5px; }
+}
+
+/* Keep the run context below the toolbar so every icon stays within reach. */
 @media (max-width: 560px) {
+  .app-shell, .app-shell.navigation-collapsed { grid-template-columns: 0 minmax(0, 1fr); }
+  .app-shell .app-content { grid-area: 1 / 2; }
   .app-shell .topbar {
-    position: relative;
-    z-index: 30;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 4px;
-    padding: 8px 12px;
-    min-height: 108px;
-    height: auto;
+    position: relative; z-index: 36; display: flex; justify-content: space-between;
+    flex-wrap: nowrap; gap: 2px; padding: 4px 10px; height: 58px; min-height: 58px;
   }
-  .topbar .topbar-context { width: 100%; gap: 8px; }
-  .topbar .breadcrumb { flex: 1; min-width: 0; gap: 4px; flex-flow: row wrap; align-items: center; }
-  .topbar .breadcrumb > .mono { font-size: 11px; line-height: 1.5; }
-  .topbar .run-status { flex: none; font-size: 10px; line-height: 1.5; white-space: normal; }
-  .topbar > .user-area {
-    display: flex; align-items: center; justify-content: space-between;
-    width: 100%; gap: 4px; margin: 0;
+  .app-shell .topbar .topbar-context { flex: 1; width: auto; min-width: 0; gap: 2px; }
+  .topbar .breadcrumb { display: none; }
+  .phone-wordmark {
+    display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--text); font-size: 14px; font-weight: 600; letter-spacing: -.4px;
   }
+  .app-shell .topbar > .user-area { display: flex; align-items: center; flex: none; width: auto; gap: 0; margin: 0; }
+  .phone-run-reference {
+    display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; margin-bottom: 7px;
+    font-variant-numeric: tabular-nums; color: var(--muted);
+  }
+  .phone-run-reference .run-status { padding: 2px 7px; font-size: 11px; line-height: 16px; }
+  .run-heading { height: auto; min-height: 0; padding: 16px 16px 0; }
+  .run-title-row { gap: 4px; }
+  .run-title-row h1 { font-size: clamp(20px, 5.6vw, 25px); line-height: 1.17; }
+  .run-title-row > .icon-button { width: 44px; height: 44px; margin-block: -6px; }
+  .run-heading > p { gap: 5px; font-size: 12px; line-height: 1.5; margin: 7px 0 8px; }
+  .run-view-controls { gap: 4px; }
+  .run-view-controls .view-tabs { height: 48px; gap: 2px; min-width: 0; }
+  .run-view-controls .view-tabs > button { min-width: 44px; margin-left: 0; padding-inline: 9px; font-size: 13px; }
+  .run-view-controls .view-tabs > button:first-child { margin-left: -9px; }
+  .run-view-controls .view-tabs .tab-indicator { transition: none; }
+  .run-view-controls .mobile-details-button { margin-block: 2px; }
+  .canvas-guide { min-height: 38px; padding: 6px 16px; font-size: 12px; }
+  .app-shell:not(.navigation-collapsed) .sidebar {
+    position: fixed; inset: 58px auto auto 8px; z-index: 35; width: min(230px, calc(100% - 16px));
+    height: auto; max-height: calc(100dvh - 70px); overflow: auto; overscroll-behavior: contain;
+    padding: 10px; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 30px #0003;
+  }
+  .app-shell .sidebar .wordmark { width: auto; height: 44px; margin: 0; justify-content: flex-start; padding: 0 8px; font-size: 16px; }
+  .app-shell .sidebar nav { margin-block: 6px; }
+  .app-shell .sidebar nav button { min-height: 44px; justify-content: flex-start; padding-inline: 9px; }
+  .app-shell .sidebar :is(.wordmark, nav button, .case-study-link, .demo-label) > span { display: inline; }
+  .app-shell .sidebar :is(.case-study-link, .demo-label) {
+    margin: 0; min-height: 44px; justify-content: flex-start; width: 100%; padding-inline: 9px;
+  }
+  .phone-nav-scrim { position: fixed; inset: 58px 0 0; z-index: 34; display: block; background: #08080b55; }
+  .app-shell .topbar .user-menu { min-width: min(280px, calc(100vw - 20px)); }
+  dialog.inspector.mobile-open[open] {
+    inset: auto 0 0; width: 100%; height: min(590px, calc(100dvh - 18px)); max-height: none;
+    margin: 0; border: 1px solid var(--border); border-width: 1px 0 0; border-radius: 18px 18px 0 0;
+    box-shadow: 0 -12px 36px #0004; animation-name: inspector-sheet-enter;
+  }
+  body:has(dialog.inspector[open]), .app-shell:has(dialog.inspector[open]) .app-content { overflow: hidden; }
   .topbar > .user-area > :is(.match-trigger, .notification-trigger, .review-guide-trigger, .theme-toggle, .avatar) {
     display: inline-flex; align-items: center; justify-content: center;
     flex: 0 0 44px; width: 44px; min-width: 44px; height: 44px; min-height: 44px;
@@ -31,10 +112,10 @@
     display: grid; place-items: center; box-sizing: border-box;
     width: 22px; height: 22px; padding: 0; font-size: 10px; line-height: 1;
   }
-  .topbar .notification-count { top: 0; right: 0; }
+  .topbar .notification-count { top: 2px; right: 1px; }
   .topbar .save-indicator { display: none; }
   .topbar .navigation-toggle { width: 44px; height: 44px; flex: 0 0 44px; }
-  .trace-split > .graph-canvas { flex: 0 0 520px; min-height: 520px; }
+  .trace-split > .graph-canvas { flex: 0 0 clamp(360px, 53svh, 460px); min-height: clamp(360px, 53svh, 460px); }
   .trace-split > .execution-log { height: auto; max-height: none; overflow: visible; }
   .canvas-guide .pan-hint-pointer { display: none; }
   .canvas-guide .pan-hint-touch { display: inline; }
@@ -49,7 +130,21 @@
   .trace-viewport .workflow-node { transition: none; }
 }
 
-/* Anchor the compact profile to its trigger, not to the viewport height. */
+@media (max-width: 369px) {
+  .phone-wordmark { font-size: 0; width: 26px; height: 26px; flex: 0 0 26px; }
+  .phone-wordmark .brand-mark { width: 26px; height: 26px; }
+  .run-view-controls .mobile-details-button { padding-inline: 8px; font-size: 12px; }
+  .run-view-controls .mobile-details-button span { display: inline; }
+  .graph-tools .graph-fit-button { min-width: 54px; }
+  .graph-fit-button svg { display: none; }
+  .run-view-controls .view-tabs > button { padding-inline: 7px; }
+}
+@media (min-width: 370px) {
+  .phone-wordmark .brand-mark { display: none; }
+}
+@keyframes inspector-sheet-enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* Place the profile immediately below the toolbar. */
 @media (max-width: 560px) {
   .topbar .user-menu {
     position: absolute;

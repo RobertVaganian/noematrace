@@ -28,7 +28,7 @@ import "./notifications.css";
 import "./mobile-workspace.css";
 import { OrderMatcher } from "./OrderMatcher.jsx";
 import { ReviewGuide } from "./ReviewGuide.jsx";
-import { MotionPresence, TabIndicator, uiDuration, useAnimatedDismiss, useCompactNavigation } from "./Motion.jsx";
+import { MotionPresence, TabIndicator, uiDuration, useAnimatedDismiss, useMediaMatch } from "./Motion.jsx";
 import { InterfaceTour } from "./InterfaceTour.jsx";
 import { TraceSplit } from "./TraceSplit.jsx";
 import { InspectorSplit } from "./InspectorSplit.jsx";
@@ -67,7 +67,6 @@ import {
   MinusIcon,
   PlusIcon,
   ArrowCounterClockwiseIcon,
-  SlidersHorizontalIcon,
   ClockIcon,
   LockSimpleIcon,
   DownloadSimpleIcon,
@@ -84,6 +83,24 @@ import {
   latestProposal,
   proposalLabels,
 } from "./model.js";
+const phoneLayout = "(max-width: 560px)";
+
+const stepTitles = {
+  invoice: "Invoice source",
+  extract: "Field extraction",
+  order: "Purchase order",
+  compare: "Total check",
+  prepare: "Payment preparation",
+  submit: "Payment submission",
+};
+
+function RunStatus({ awaiting }) {
+  return <span className="run-status">
+    {awaiting ? <ClockIcon size={15} /> : <PauseCircleIcon size={16} weight="fill" />}
+    {awaiting ? "Awaiting approval" : "Paused"}
+  </span>;
+}
+
 const nodeIcons = {
   invoice: FileIcon,
   extract: ListBulletsIcon,
@@ -625,7 +642,7 @@ function Inspector({
     ) ||
       state.role === "approver");
   const panelRef = useRef(null);
-  const dismiss = useAnimatedDismiss(panelRef, { kind: "drawer" });
+  const dismiss = useAnimatedDismiss(panelRef, { kind: matchMedia(phoneLayout).matches ? "sheet" : "drawer" });
   useEffect(() => {
     if (!mobileOpen) return;
     const panel = panelRef.current;
@@ -639,20 +656,12 @@ function Inspector({
     return () => {
       media.removeEventListener("change", leaveCompact);
       if (panel.open) panel.close();
-      if (previousFocus?.isConnected) previousFocus.focus();
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
   }, [mobileOpen]);
   const Panel = mobileOpen ? "dialog" : "aside";
   const spec = specs.find((n) => n.id === selected);
   const extraction = selected === "extract" ? invoiceFieldEvidence(state) : null;
-  const titles = {
-    invoice: "Invoice source",
-    extract: "Field extraction",
-    order: "Purchase order",
-    compare: "Total check",
-    prepare: "Payment preparation",
-    submit: "Payment submission",
-  };
   return (
     <Panel
       ref={panelRef}
@@ -662,20 +671,31 @@ function Inspector({
       }}
       className={`inspector ${mobileOpen ? "mobile-open" : ""}`}
       id="step-inspector"
-      aria-label="Step details"
+      aria-labelledby="inspector-step-title"
+      onClick={mobileOpen ? event => {
+        if (event.target !== event.currentTarget) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right ||
+            event.clientY < bounds.top || event.clientY > bounds.bottom) dismiss(onClose);
+      } : undefined}
     >
-      <div className="inspector-mobile-close">
-        <IconButton label="Close details" onClick={() => dismiss(onClose)}>
-          <XIcon size={18} />
-        </IconButton>
-      </div>
-      <div className="motion-content" key={selected}>
-      <div className="inspector-title"><h2>{titles[selected]}</h2>{customWidth && !mobileOpen && <button type="button" onClick={resetWidth} aria-label="Reset details width" title="Reset details width"><ArrowCounterClockwiseIcon size={15} /></button>}</div>
-      <p className="inspector-description">
-        {selected === "compare"
-          ? "Compare invoice and order amounts"
-          : spec.data.sub}
-      </p>
+      <header className="inspector-heading">
+        <div>
+          <div className="inspector-title">
+            <h2 id="inspector-step-title">{stepTitles[selected]}</h2>
+            {customWidth && !mobileOpen && <button type="button" onClick={resetWidth} aria-label="Reset details width" title="Reset details width"><ArrowCounterClockwiseIcon size={15} /></button>}
+          </div>
+          <p className="inspector-description">
+            {selected === "compare" ? "Compare invoice and order amounts" : spec.data.sub}
+          </p>
+        </div>
+        <div className="inspector-mobile-close">
+          <IconButton label="Close details" onClick={() => dismiss(onClose)}>
+            <XIcon size={20} />
+          </IconButton>
+        </div>
+      </header>
+      <div className="inspector-body motion-content" key={selected} tabIndex={mobileOpen ? 0 : undefined}>
       {selected === "compare" ? (
         <>
           <div className="check-status">
@@ -800,9 +820,12 @@ function Inspector({
           <ArrowSquareOutIcon size={16} />
         </button>
       </section>
+      </div>
       <section className="inspector-action" data-tour="review-action">
-        <span className="muted">Status</span>
-        <p>Payment has not started.</p>
+        <div className="inspector-payment">
+          <span className="muted">Status</span>
+          <p>Payment has not started.</p>
+        </div>
         {submitted && (
           <div className="pending-note">
             <ClockIcon size={16} />
@@ -824,7 +847,6 @@ function Inspector({
           <kbd aria-hidden="true">R</kbd><ArrowRightIcon size={16} aria-hidden="true" />
         </button>
       </section>
-      </div>
     </Panel>
   );
 }
@@ -867,14 +889,27 @@ export function App() {
     return (new URLSearchParams(location.search).get("match") === "1" || new URLSearchParams(location.search).get("notifications") === "1") ? null : initialTourStep(location.search, preference, recovery.state || scene.state);
   });
   const [tourLayout, setTourLayout] = useState(0);
-  const compactNavigation = useCompactNavigation();
-  const [navigationCollapsed, setNavigationCollapsed] = useState(() => {
-    const phone = window.matchMedia("(max-width: 560px)").matches;
+  const compactNavigation = useMediaMatch("(max-width: 1050px)");
+  const phone = useMediaMatch(phoneLayout);
+  const [phoneNavOpen, setPhoneNavOpen] = useState(false);
+  const navToggle = useRef(null);
+  const phoneNav = useRef(null);
+  const [desktopNavigationCollapsed, setDesktopNavigationCollapsed] = useState(() => {
     try { return readNavigation(localStorage, location.search, phone); } catch { return phone; }
   });
+  const navigationCollapsed = phone ? !phoneNavOpen : desktopNavigationCollapsed;
   useEffect(() => {
-    try { saveNavigation(localStorage, location.search, navigationCollapsed); } catch { /* Session choice remains available. */ }
-  }, [navigationCollapsed]);
+    if (phone) return;
+    try { saveNavigation(localStorage, location.search, desktopNavigationCollapsed); } catch { /* Session choice remains available. */ }
+  }, [desktopNavigationCollapsed, phone]);
+  useEffect(() => {
+    if (!phone) setPhoneNavOpen(false);
+    else if (phoneNavOpen) phoneNav.current?.querySelector('[aria-current="page"]')?.focus({ preventScroll: true });
+  }, [phone, phoneNavOpen]);
+  const closePhoneNav = () => {
+    setPhoneNavOpen(false);
+    navToggle.current?.focus({ preventScroll: true });
+  };
   const [saved, setSaved] = useState(recovery.status !== "unavailable");
   const [nav, setNav] = useState("runs");
   const [tab, setTab] = useState(scene.tab);
@@ -1008,7 +1043,11 @@ export function App() {
     return () => clearTimeout(t);
   }, [toast]);
   const cancelGraphFocus = () => { ++focusSequence.current; setGraphFocus(null); };
-  const selectGraphNode = (nodeId) => { cancelGraphFocus(); setSelected(nodeId); };
+  const selectGraphNode = (nodeId) => {
+    cancelGraphFocus();
+    setSelected(nodeId);
+    if (phone) setDetails(true);
+  };
   useEffect(() => {
     if (nav !== "runs" || tab !== "trace") cancelGraphFocus();
   }, [nav, tab]);
@@ -1046,17 +1085,23 @@ export function App() {
       setToast(`Run ID: ${RUN_ID}`);
     }
   };
+  const navigateFromMenu = (view) => {
+    setNav(view);
+    if (phone) closePhoneNav();
+  };
   return (
     <div
+      onKeyDown={event => { if (phone && phoneNavOpen && event.key === "Escape") closePhoneNav(); }}
       className={`app-shell ${navigationCollapsed ? "navigation-collapsed" : ""} ${new URLSearchParams(location.search).has("capture") ? "reference-capture" : ""}`}
     >
-      <aside className="sidebar" id="main-sidebar" inert={navigationCollapsed && compactNavigation} aria-hidden={navigationCollapsed && compactNavigation || undefined}>
+      {phone && phoneNavOpen && <button className="phone-nav-scrim" tabIndex={-1} aria-label="Close navigation" onClick={closePhoneNav} />}
+      <aside ref={phoneNav} className="sidebar" id="main-sidebar" inert={navigationCollapsed && compactNavigation} aria-hidden={navigationCollapsed && compactNavigation || undefined}>
         <a
           className="wordmark"
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            setNav("runs");
+            navigateFromMenu("runs");
           }}
           aria-label="NoemaTrace home"
         >
@@ -1075,7 +1120,7 @@ export function App() {
             title="Review queue"
             className={nav === "queue" ? "active" : ""}
             aria-current={nav === "queue" ? "page" : undefined}
-            onClick={() => setNav("queue")}
+            onClick={() => navigateFromMenu("queue")}
           >
             <FileIcon size={19} />
             <span>Review queue</span>
@@ -1086,7 +1131,7 @@ export function App() {
             title="Runs"
             className={nav === "runs" ? "active" : ""}
             aria-current={nav === "runs" ? "page" : undefined}
-            onClick={() => setNav("runs")}
+            onClick={() => navigateFromMenu("runs")}
           >
             <PulseIcon size={19} />
             <span>Runs</span>
@@ -1096,7 +1141,7 @@ export function App() {
             title="Audit log"
             className={nav === "audit" ? "active" : ""}
             aria-current={nav === "audit" ? "page" : undefined}
-            onClick={() => setNav("audit")}
+            onClick={() => navigateFromMenu("audit")}
           >
             <ClipboardTextIcon size={19} />
             <span>Audit log</span>
@@ -1114,7 +1159,7 @@ export function App() {
           aria-label="About this demo"
           title="About this demo"
           className="demo-label"
-          onClick={() => setModal("about")}
+          onClick={() => { if (phone) closePhoneNav(); setModal("about"); }}
         >
           <InfoIcon size={18} />
           <span>Demo</span>
@@ -1124,9 +1169,14 @@ export function App() {
         <header className="topbar">
           <div className="topbar-context">
           <IconButton label={navigationCollapsed ? "Expand navigation" : "Collapse navigation"} className="navigation-toggle"
-            aria-expanded={!navigationCollapsed} aria-controls="main-sidebar" onClick={() => setNavigationCollapsed(!navigationCollapsed)}>
+            aria-expanded={!navigationCollapsed} aria-controls="main-sidebar" ref={navToggle}
+            onClick={() => phone ? setPhoneNavOpen(open => !open) : setDesktopNavigationCollapsed(collapsed => !collapsed)}>
             <SidebarSimpleIcon size={20} />
           </IconButton>
+          <span className="phone-wordmark" aria-hidden="true">
+            <img className="brand-mark" src={appUrl("/brand/noematrace-mark.png")} alt="" width="26" height="26" />
+            NoemaTrace
+          </span>
           <div className="breadcrumb">
             <span>Accounts payable</span>
             <span className="crumb-divider">/</span>
@@ -1137,16 +1187,7 @@ export function App() {
                   ? "Review queue"
                   : "Audit log"}
             </span>
-            {nav === "runs" && (
-              <span className="run-status">
-                {state.phase === "requested" ? (
-                  <ClockIcon size={15} />
-                ) : (
-                  <PauseCircleIcon size={16} weight="fill" />
-                )}
-                {state.phase === "requested" ? "Awaiting approval" : "Paused"}
-              </span>
-            )}
+            {nav === "runs" && <RunStatus awaiting={state.phase === "requested"} />}
           </div>
           </div>
           <div className="user-area">
@@ -1256,6 +1297,10 @@ export function App() {
           <InspectorSplit onResizeStart={cancelGraphFocus} inspector={({ customWidth, resetWidth }) => <Inspector selected={selected} state={state} onReview={openReview} onSource={onSource} mobileOpen={details} onClose={() => setDetails(false)} customWidth={customWidth} resetWidth={resetWidth} />}>
             <section className="run-main">
               <header className="run-heading">
+                <div className="phone-run-reference">
+                  <span className="mono">{RUN_ID}</span>
+                  <RunStatus awaiting={state.phase === "requested"} />
+                </div>
                 <div className="run-title-row">
                   <h1>Northline Components</h1>
                   <span className="mono">INV-2048</span>
@@ -1270,6 +1315,7 @@ export function App() {
                     <span className="meta-dot">·</span>Triggered automatically
                   </span>
                 </p>
+                <div className="run-view-controls">
                 <div className="view-tabs" role="tablist" aria-label="Run view">
                   <button
                     role="tab"
@@ -1314,13 +1360,18 @@ export function App() {
                     )}
                   </button>
                   <TabIndicator value={tab} />
+                </div>
                   <button
                     className="mobile-details-button"
                     aria-label="Open step details"
                     data-tour="details"
+                    aria-haspopup="dialog"
+                    aria-controls="step-inspector"
+                    aria-expanded={details}
+                    title={stepTitles[selected]}
                     onClick={() => setDetails(true)}
                   >
-                    <SlidersHorizontalIcon size={16} />
+                    <ListBulletsIcon size={16} />
                     <span>Details</span>
                   </button>
                 </div>

@@ -1,14 +1,15 @@
 import { cloneElement, useCallback, useLayoutEffect, useRef, useState } from "react";
 import { exitMotion, motionDisabled } from "./motion.js";
 
-export function useCompactNavigation() {
-  const [compact, setCompact] = useState(() => matchMedia("(max-width: 1050px)").matches);
+export function useMediaMatch(query) {
+  const [compact, setCompact] = useState(() => matchMedia(query).matches);
   useLayoutEffect(() => {
-    const media = matchMedia("(max-width: 1050px)");
+    const media = matchMedia(query);
+    setCompact(media.matches);
     const change = () => setCompact(media.matches);
     media.addEventListener("change", change);
     return () => media.removeEventListener("change", change);
-  }, []);
+  }, [query]);
   return compact;
 }
 

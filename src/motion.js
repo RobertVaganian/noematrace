@@ -34,7 +34,14 @@ export function exitMotion(element, commit, { target = element, kind = "dialog",
   else {
     element.dataset.motionExiting = "";
     element.inert = true;
-    const transform = kind === "drawer" ? "translateX(12px)" : kind === "tour" ? "translateY(4px)" : kind === "menu" ? "translateY(-3px)" : kind === "toast" ? "translate(-50%, 6px)" : "translateY(4px) scale(.99)";
+    const transforms = {
+      drawer: "translateX(12px)",
+      sheet: "translateY(16px)",
+      tour: "translateY(4px)",
+      menu: "translateY(-3px)",
+      toast: "translate(-50%, 6px)",
+    };
+    const transform = transforms[kind] ?? "translateY(4px) scale(.99)";
     try {
       animation = target.animate([
         { opacity: start.opacity ?? 1, transform: start.transform ?? "none" },
