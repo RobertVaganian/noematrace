@@ -636,7 +636,7 @@ export function CaseStudy() {
                 </p>
               </article>
             </div>
-            <p className="case-tour-note"><strong>Room to review on a phone.</strong> Navigation starts collapsed, five header actions share 44 px touch targets, and the event log stays in the page’s scrolling flow. Drag empty space or pinch to inspect the workflow; Fit restores all six steps. Panning stays inside the canvas engine, while zoom-dependent arrow and grid sizes update at most once per animation frame.</p>
+            <p className="case-tour-note"><strong>Room to review on a phone.</strong> Navigation starts collapsed, and the event log scrolls with the page. Each of the five header buttons has a 44 × 44 px touch target. Drag empty space or pinch to inspect the workflow; Fit restores all six steps. Panning stays inside the canvas engine, while zoom-dependent arrow and grid sizes update at most once per animation frame.</p>
             <Refinements />
           </Chapter>
           <Chapter

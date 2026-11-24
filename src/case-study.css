@@ -915,6 +915,9 @@ body:has(.case-study) { min-width: 0; }
 .case-frame-modal p { font-size: 12px; line-height: 1.6; margin: 12px 0 0; color: var(--case-muted); }
 
 .case-chapter-content > .case-tour-note { padding: 17px 19px; border: 1px solid var(--case-border); border-radius: 10px; font-size: 13px; line-height: 1.75; color: var(--case-muted); }
+.case-chapter-content > :is(.case-open-button, .case-design-notes) + .case-tour-note {
+  margin-top: clamp(16px, 2.4vw, 24px);
+}
 .case-tour-note strong { font-weight: 500; color: var(--text); }
 .case-tour-note a { display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: 3px; }
 
